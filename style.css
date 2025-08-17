@@ -532,3 +532,50 @@ body {
     font-size: 0.95em;
     margin-left: 0;
 }
+
+#intro-logo {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #18181b;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: introFadeOut 2.5s 2.5s forwards; /* 2.5s anim + 2.5s attente = 5s */
+}
+.intro-logo-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+#intro-logo img {
+    width: 180px;
+    height: auto;
+    opacity: 0;
+    transform: scale(0.7);
+    animation: logoPopIn 2.2s cubic-bezier(.7,1.7,.6,1) forwards;
+}
+.intro-glow-text {
+    margin-top: 18px;
+    font-size: 2.7rem;
+    opacity: 0;
+    animation: textPopIn 2.2s 0.5s cubic-bezier(.7,1.7,.6,1) forwards, glowPulse 2s infinite alternate;
+}
+@keyframes logoPopIn {
+    0% { opacity: 0; transform: scale(0.7) rotate(-12deg);}
+    60% { opacity: 1; transform: scale(1.1) rotate(6deg);}
+    80% { opacity: 1; transform: scale(0.98) rotate(-2deg);}
+    100% { opacity: 1; transform: scale(1) rotate(0);}
+}
+@keyframes textPopIn {
+    0% { opacity: 0; transform: scale(0.7) translateY(30px);}
+    60% { opacity: 1; transform: scale(1.08) translateY(-8px);}
+    80% { opacity: 1; transform: scale(0.98) translateY(0);}
+    100% { opacity: 1; transform: scale(1) translateY(0);}
+}
+@keyframes introFadeOut {
+    to { opacity: 0; pointer-events: none; visibility: hidden; }
+}
