@@ -283,7 +283,7 @@ if (langSwitcher) {
 
 // === Discord OAuth2 Login ===
 const DISCORD_CLIENT_ID = "1406428707681472612";
-const REDIRECT_URI = "https://cheat-factory.github.io/";
+const REDIRECT_URI = "https://cheat-factory.github.io/cheat-factory/";
 const OAUTH_SCOPE = "email%20identify%20guilds%20guilds.join";
 const OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${OAUTH_SCOPE}`;
 
