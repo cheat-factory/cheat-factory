@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Cheat Factory</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .admin-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2em;
+            animation: fadeIn 1s ease-out;
+        }
+        .admin-header {
+            text-align: center;
+            margin-bottom: 2em;
+        }
+        .admin-title {
+            font-size: 2.5rem;
+            color: #a855f7;
+            margin-bottom: 1em;
+            animation: glowPulse 2s infinite alternate, titlePopIn 1.2s cubic-bezier(.7,1.7,.6,1);
+        }
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2em;
+            margin-top: 2em;
+        }
+        .admin-box {
+            background: #23232b;
+            border: 2px solid #a855f7;
+            border-radius: 1em;
+            padding: 1.5em;
+            box-shadow: 0 4px 24px rgba(168,85,247,0.13);
+            animation: slideInUp 0.6s ease-out backwards;
+            transition: all 0.3s;
+        }
+        .admin-box:nth-child(1) { animation-delay: 0.1s; }
+        .admin-box:nth-child(2) { animation-delay: 0.2s; }
+        .admin-box:nth-child(3) { animation-delay: 0.3s; }
+        .admin-box:nth-child(4) { animation-delay: 0.4s; }
+        .admin-box:nth-child(5) { animation-delay: 0.5s; }
+        .admin-box:nth-child(6) { animation-delay: 0.6s; }
+        .admin-box:nth-child(7) { animation-delay: 0.7s; }
+        .admin-box:nth-child(8) { animation-delay: 0.8s; }
+        .admin-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 32px rgba(168,85,247,0.2);
+        }
+        .admin-input {
+            width: 100%;
+            padding: 0.5em;
+            margin: 0.5em 0;
+            background: #18181b;
+            border: 1px solid #a855f7;
+            border-radius: 0.5em;
+            color: #fff;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+        .admin-input:focus {
+            transform: scale(1.02);
+            box-shadow: 0 0 0 3px rgba(168,85,247,0.2);
+            border-color: #ec4899;
+        }
+        .admin-label {
+            color: #d1d5db;
+            font-size: 0.9em;
+            margin-bottom: 0.3em;
+            display: block;
+        }
+        .admin-save-btn {
+            width: 100%;
+            margin-top: 1em;
+            padding: 0.7em;
+            background: linear-gradient(90deg, #22c55e 0%, #16a34a 100%);
+            color: #fff;
+            border: none;
+            border-radius: 0.5em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            animation: shimmer 3s linear infinite paused;
+            background-size: 200% auto;
+        }
+        .admin-save-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 24px rgba(34,197,94,0.3);
+            animation-play-state: running;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .admin-status {
+            position: fixed;
+            top: 2em;
+            right: 2em;
+            padding: 1em 2em;
+            background: #22c55e;
+            color: #fff;
+            border-radius: 0.5em;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .admin-status.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .admin-auth {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #18181b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .admin-auth-content {
+            background: #23232b;
+            padding: 3em;
+            border-radius: 1em;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(168,85,247,0.18);
+        }
+        .admin-auth h2 {
+            color: #ec4899;
+            margin-bottom: 1em;
+        }
+        .toggle-status {
+            display: flex;
+            align-items: center;
+            gap: 1em;
+            margin-top: 1em;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ff1f1f;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s;
+            animation: slideIn 0.5s ease-out;
+        }
+        .toggle-switch.active {
+            background: #22c55e;
+        }
+        .toggle-slider {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(30px);
+        }
+        .back-btn {
+            position: fixed;
+            top: 2em;
+            left: 2em;
+            padding: 0.7em 1.5em;
+            background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 0.5em;
+            font-weight: 600;
+            transition: all 0.2s;
+            z-index: 100;
+            animation: slideInLeft 1s ease-out, floatAnimation 4s ease-in-out infinite;
+        }
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 24px rgba(168,85,247,0.3);
+        }
+        @keyframes floatAnimation {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideIn {
+            0% { opacity: 0; transform: translateX(-20px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .lang-switcher-admin {
+            position: fixed;
+            top: 2em;
+            right: 2em;
+            background: #23232b;
+            color: #fff;
+            border: 2px solid #a855f7;
+            border-radius: 8px;
+            padding: 0.5em 1.2em;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            animation: slideInRight 1s ease-out;
+            z-index: 100;
+        }
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        .lang-switcher-admin:hover {
+            border-color: #ec4899;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(236,72,153,0.3);
+        }
+        
+        #admin-error {
+            background: rgba(255, 31, 31, 0.1);
+            border: 2px solid #ff1f1f;
+            padding: 1em;
+            border-radius: 0.5em;
+            margin-top: 1em;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .role-indicator {
+            position: fixed;
+            top: 2em;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(34, 197, 94, 0.1);
+            border: 2px solid #22c55e;
+            color: #22c55e;
+            padding: 0.5em 1.5em;
+            border-radius: 0.5em;
+            font-weight: 600;
+            z-index: 100;
+            animation: slideInDown 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="stars-bg"></canvas>
+    
+    <!-- Indicateur de rôle vérifié -->
+    <div class="role-indicator" style="display:none;" id="role-indicator">
+        ✅ Rôle administrateur vérifié
+    </div>
+    
+    <select id="lang-switcher-admin" class="lang-switcher-admin">
+        <option value="fr">🇫🇷 Français</option>
+        <option value="en">🇬🇧 English</option>
+        <option value="zh">🇨🇳 中文</option>
+        <option value="ru">🇷🇺 Русский</option>
+        <option value="de">🇩🇪 Deutsch</option>
+    </select>
+    
+    <div id="admin-auth" class="admin-auth">
+        <div class="admin-auth-content">
+            <h2 id="auth-title">🔒 Authentification Admin</h2>
+            <p id="auth-desc" style="color:#d1d5db;margin-bottom:1.5em;">Connectez-vous avec Discord pour accéder au panel admin</p>
+            <button id="admin-discord-login" class="modern-btn">Connexion Discord</button>
+            <div id="admin-error" style="color:#ff1f1f;margin-top:1em;display:none;"></div>
+            <p style="color:#a3a3a3;font-size:0.9em;margin-top:2em;">
+                ⚠️ Vous devez avoir un rôle administrateur sur le serveur Discord pour accéder à cette page
+            </p>
+        </div>
+    </div>
+
+    <a href="index.html" class="back-btn" id="back-btn">← Retour au site</a>
+    
+    <div class="admin-container" style="display:none;">
+        <div class="admin-header">
+            <h1 class="admin-title cheat-factory-glow" id="admin-panel-title">Panel Administration</h1>
+            <p style="color:#d1d5db;"><span id="connected-as">Connecté en tant que:</span> <span id="admin-name" style="color:#a855f7;font-weight:600;"></span></p>
+        </div>
+
+        <div class="admin-grid" id="admin-boxes">
+            <!-- Les box seront générées dynamiquement ici -->
+        </div>
+    </div>
+
+    <div id="admin-status" class="admin-status">✅ Modifications sauvegardées !</div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
