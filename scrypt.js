@@ -169,9 +169,31 @@ const langData = {
         price: "Prix : <b>Gratuit</b>",
         modalTermes: "📜 Règlement du Serveur Discord 📜",
         modalAvis: "Les avis des utilisateurs",
+        modalTermesContent: `
+Bienvenue sur notre serveur ! Avant de participer, merci de lire et de respecter les règles ci-dessous afin de garantir une bonne ambiance pour tous.<br><br>
+<b>Respect :</b> Le respect mutuel est essentiel. Aucune insulte, discrimination, harcèlement ou comportement toxique ne sera toléré.<br><br>
+<b>Pas de Spam :</b> Évitez de spammer les salons, les messages privés ou les mentions. Le spam inutile perturbe la communauté.<br><br>
+<b>Contenu Inapproprié :</b> Tout contenu inapproprié (NSFW, violence, etc.) est strictement interdit. Restez dans le cadre des règles de Discord.<br><br>
+<b>Publicité :</b> Aucune publicité pour d'autres serveurs, produits ou services n'est autorisée sans l'accord préalable de l'administration.<br><br>
+<b>Utilisation des salons :</b> Chaque salon a un but précis. Merci de respecter les thématiques des canaux et d'utiliser le bon salon pour chaque discussion.<br><br>
+<b>Aide et Tickets :</b> Si tu as un problème ou une question, utilise le système de tickets (PAS DE MP AUX ADMINS OU AU FONDATEUR). Nous sommes là pour t'aider !<br><br>
+<b>Cheats et Hacks :</b> L'utilisation ou le partage d'outils non autorisés en dehors du cadre du serveur est strictement interdit. Toute violation est sous ta responsabilité.<br><br>
+<b>Respect des Modérateurs :</b> Les décisions des modérateurs doivent être respectées. En cas de désaccord, discutez-en calmement.<br><br>
+<b>Sanctions :</b> Le non-respect des règles peut entraîner un avertissement, un kick, ou un ban, selon la gravité de l'infraction.
+        `,
+        download: "Télécharger",
+        update: "Mettre à jour",
+        down: "HORS LIGNE",
+        price: "Prix : <b>Gratuit</b>",
+        modalTermes: "📜 Règlement du Serveur Discord 📜",
+        modalAvis: "Les avis des utilisateurs",
         avisPseudo: "Votre pseudo",
         avisText: "Votre avis...",
         avisEnvoyer: "Envoyer",
+        discordLogin: "Connexion Discord",
+        discordLogout: "Déconnexion",
+        discordLink: "Discord Link",
+        avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
     },
     en: {
         searchPlaceholder: "Search cheats...",
@@ -184,9 +206,31 @@ const langData = {
         price: "Price: <b>Free</b>",
         modalTermes: "📜 Discord Server Rules 📜",
         modalAvis: "User Reviews",
+        modalTermesContent: `
+Welcome to our server! Before participating, please read and follow the rules below to ensure a good atmosphere for everyone.<br><br>
+<b>Respect:</b> Mutual respect is essential. No insults, discrimination, harassment, or toxic behavior will be tolerated.<br><br>
+<b>No Spam:</b> Avoid spamming channels, private messages, or mentions. Unnecessary spam disrupts the community.<br><br>
+<b>Inappropriate Content:</b> Any inappropriate content (NSFW, violence, etc.) is strictly prohibited. Stay within Discord's rules.<br><br>
+<b>Advertising:</b> No advertising for other servers, products, or services is allowed without prior admin approval.<br><br>
+<b>Channel Usage:</b> Each channel has a specific purpose. Please respect the topics and use the correct channel for each discussion.<br><br>
+<b>Help & Tickets:</b> If you have a problem or question, use the ticket system (NO DMs TO ADMINS OR THE FOUNDER). We're here to help!<br><br>
+<b>Cheats & Hacks:</b> Using or sharing unauthorized tools outside the server is strictly prohibited. Any violation is your responsibility.<br><br>
+<b>Respect Moderators:</b> Moderator decisions must be respected. If you disagree, discuss calmly.<br><br>
+<b>Sanctions:</b> Breaking the rules may result in a warning, kick, or ban, depending on the severity.
+        `,
+        download: "Download",
+        update: "Update",
+        down: "DOWN",
+        price: "Price: <b>Free</b>",
+        modalTermes: "📜 Discord Server Rules 📜",
+        modalAvis: "User Reviews",
         avisPseudo: "Your nickname",
         avisText: "Your review...",
         avisEnvoyer: "Send",
+        discordLogin: "Discord Login",
+        discordLogout: "Logout",
+        discordLink: "Discord Link",
+        avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
     },
     zh: {
         searchPlaceholder: "搜索作弊...",
@@ -199,9 +243,31 @@ const langData = {
         price: "价格: <b>免费</b>",
         modalTermes: "📜 Discord服务器规则 📜",
         modalAvis: "用户评论",
+        modalTermesContent: `
+欢迎加入我们的服务器！在参与之前，请阅读并遵守以下规则，以确保大家有良好的氛围。<br><br>
+<b>尊重：</b> 相互尊重至关重要。禁止任何侮辱、歧视、骚扰或有害行为。<br><br>
+<b>禁止刷屏：</b> 请勿在频道、私信或@中刷屏。无意义的刷屏会扰乱社区。<br><br>
+<b>不当内容：</b> 严禁发布任何不当内容（NSFW、暴力等）。请遵守Discord规则。<br><br>
+<b>广告：</b> 未经管理员许可，禁止宣传其他服务器、产品或服务。<br><br>
+<b>频道使用：</b> 每个频道有特定用途。请尊重主题并在正确频道讨论。<br><br>
+<b>帮助与工单：</b> 如有问题请使用工单系统（不要私信管理员或创始人）。我们会帮助你！<br><br>
+<b>作弊与破解：</b> 严禁在服务器外使用或分享未授权工具。违规后果自负。<br><br>
+<b>尊重管理员：</b> 必须尊重管理员决定。如有异议请冷静讨论。<br><br>
+<b>处罚：</b> 违反规则可能被警告、踢出或封禁，视情况而定。
+        `,
+        download: "下载",
+        update: "更新",
+        down: "关闭",
+        price: "价格: <b>免费</b>",
+        modalTermes: "📜 Discord服务器规则 📜",
+        modalAvis: "用户评论",
         avisPseudo: "你的昵称",
         avisText: "你的评论...",
         avisEnvoyer: "发送",
+        discordLogin: "Discord 登录",
+        discordLogout: "退出",
+        discordLink: "Discord链接",
+        avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
     },
     ru: {
         searchPlaceholder: "Поиск читов...",
@@ -214,9 +280,31 @@ const langData = {
         price: "Цена: <b>Бесплатно</b>",
         modalTermes: "📜 Правила Discord сервера 📜",
         modalAvis: "Отзывы пользователей",
+        modalTermesContent: `
+Добро пожаловать на наш сервер! Перед участием ознакомьтесь с правилами ниже для поддержания хорошей атмосферы.<br><br>
+<b>Уважение:</b> Взаимное уважение обязательно. Оскорбления, дискриминация, травля и токсичное поведение запрещены.<br><br>
+<b>Без спама:</b> Не спамьте в каналах, личных сообщениях или упоминаниях. Спам мешает сообществу.<br><br>
+<b>Неприемлемый контент:</b> Любой неприемлемый контент (NSFW, насилие и т.д.) строго запрещен. Соблюдайте правила Discord.<br><br>
+<b>Реклама:</b> Реклама других серверов, продуктов или услуг без разрешения администрации запрещена.<br><br>
+<b>Использование каналов:</b> Каждый канал имеет свою тему. Соблюдайте тематику и используйте правильный канал.<br><br>
+<b>Помощь и тикеты:</b> Если есть вопрос или проблема, используйте систему тикетов (НЕ ПИШИТЕ В ЛС АДМИНАМ ИЛИ ОСНОВАТЕЛЮ). Мы поможем!<br><br>
+<b>Читы и хаки:</b> Использование или распространение неразрешённых инструментов вне сервера запрещено. Нарушения на вашей ответственности.<br><br>
+<b>Уважение к модераторам:</b> Решения модераторов должны уважаться. В случае несогласия обсуждайте спокойно.<br><br>
+<b>Санкции:</b> Нарушение правил может привести к предупреждению, кику или бану в зависимости от тяжести.
+        `,
+        download: "Скачать",
+        update: "Обновить",
+        down: "НЕ РАБОТАЕТ",
+        price: "Цена: <b>Бесплатно</b>",
+        modalTermes: "📜 Правила Discord сервера 📜",
+        modalAvis: "Отзывы пользователей",
         avisPseudo: "Ваш ник",
         avisText: "Ваш отзыв...",
         avisEnvoyer: "Отправить",
+        discordLogin: "Войти через Discord",
+        discordLogout: "Выйти",
+        discordLink: "Ссылка Discord",
+        avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
     },
     de: {
         searchPlaceholder: "Cheats suchen...",
@@ -229,9 +317,31 @@ const langData = {
         price: "Preis: <b>Kostenlos</b>",
         modalTermes: "📜 Discord-Server Regeln 📜",
         modalAvis: "Nutzerbewertungen",
+        modalTermesContent: `
+Willkommen auf unserem Server! Bitte lies und beachte die folgenden Regeln, um eine gute Atmosphäre für alle zu gewährleisten.<br><br>
+<b>Respekt:</b> Gegenseitiger Respekt ist wichtig. Beleidigungen, Diskriminierung, Belästigung oder toxisches Verhalten sind verboten.<br><br>
+<b>Kein Spam:</b> Spam in Kanälen, privaten Nachrichten oder Erwähnungen ist zu vermeiden. Unnötiger Spam stört die Community.<br><br>
+<b>Unangemessene Inhalte:</b> Jegliche unangemessenen Inhalte (NSFW, Gewalt usw.) sind streng verboten. Halte dich an die Discord-Regeln.<br><br>
+<b>Werbung:</b> Werbung für andere Server, Produkte oder Dienstleistungen ist ohne vorherige Zustimmung der Admins nicht erlaubt.<br><br>
+<b>Kanalnutzung:</b> Jeder Kanal hat einen bestimmten Zweck. Bitte respektiere die Themen und nutze den richtigen Kanal.<br><br>
+<b>Hilfe & Tickets:</b> Bei Problemen oder Fragen nutze das Ticketsystem (KEINE DMs AN ADMINS ODER DEN GRÜNDER). Wir helfen dir!<br><br>
+<b>Cheats & Hacks:</b> Die Nutzung oder Weitergabe nicht genehmigter Tools außerhalb des Servers ist streng verboten. Verstöße liegen in deiner Verantwortung.<br><br>
+<b>Respekt gegenüber Moderatoren:</b> Entscheidungen der Moderatoren sind zu respektieren. Bei Meinungsverschiedenheiten diskutiere ruhig.<br><br>
+<b>Sanktionen:</b> Regelverstöße können je nach Schwere zu einer Verwarnung, einem Kick oder einem Bann führen.
+        `,
+        download: "Herunterladen",
+        update: "Update",
+        down: "DOWN",
+        price: "Preis: <b>Kostenlos</b>",
+        modalTermes: "📜 Discord-Server Regeln 📜",
+        modalAvis: "Nutzerbewertungen",
         avisPseudo: "Dein Name",
         avisText: "Deine Bewertung...",
         avisEnvoyer: "Senden",
+        discordLogin: "Discord Anmeldung",
+        discordLogout: "Abmelden",
+        discordLink: "Discord Link",
+        avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
     }
 };
 
@@ -261,6 +371,8 @@ function setLang(lang) {
     // Traduction modals
     const modalTermesTitle = document.querySelector('#modal-termes .modal-content h2');
     if (modalTermesTitle) modalTermesTitle.textContent = langData[lang].modalTermes;
+    const modalTermesContent = document.querySelector('#modal-termes .modal-content p');
+    if (modalTermesContent) modalTermesContent.innerHTML = langData[lang].modalTermesContent;
     const modalAvisTitle = document.querySelector('#modal-avis .modal-content h2');
     if (modalAvisTitle) modalAvisTitle.textContent = langData[lang].modalAvis;
 
@@ -271,6 +383,24 @@ function setLang(lang) {
     if (avisText) avisText.placeholder = langData[lang].avisText;
     const avisEnvoyer = document.querySelector('#avis-form button[type="submit"]');
     if (avisEnvoyer) avisEnvoyer.textContent = langData[lang].avisEnvoyer;
+
+    // Traduction Discord login/logout
+    const discordLoginBtn = document.getElementById('discord-login');
+    if (discordLoginBtn) discordLoginBtn.textContent = langData[lang].discordLogin;
+    const discordLogoutBtn = document.getElementById('discord-logout');
+    if (discordLogoutBtn) discordLogoutBtn.textContent = langData[lang].discordLogout;
+
+    // Traduction Discord link
+    const discordLink = document.querySelector('.discord-link');
+    if (discordLink) discordLink.textContent = langData[lang].discordLink;
+
+    // Traduction des options de note dans le formulaire avis
+    const avisNoteSelect = document.getElementById('avis-note');
+    if (avisNoteSelect) {
+        Array.from(avisNoteSelect.options).forEach((opt, idx) => {
+            opt.textContent = langData[lang].avisNote[idx];
+        });
+    }
 }
 
 const langSwitcher = document.getElementById('lang-switcher');
