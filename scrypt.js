@@ -194,6 +194,8 @@ Bienvenue sur notre serveur ! Avant de participer, merci de lire et de respecter
         discordLogout: "Déconnexion",
         discordLink: "Discord Link",
         avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
+        popupConnect: "Tu dois être connecté avec Discord pour télécharger.",
+        popupBtn: "Se connecter",
     },
     en: {
         searchPlaceholder: "Search cheats...",
@@ -231,6 +233,8 @@ Welcome to our server! Before participating, please read and follow the rules be
         discordLogout: "Logout",
         discordLink: "Discord Link",
         avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
+        popupConnect: "You must be connected with Discord to download.",
+        popupBtn: "Login",
     },
     zh: {
         searchPlaceholder: "搜索作弊...",
@@ -268,6 +272,8 @@ Welcome to our server! Before participating, please read and follow the rules be
         discordLogout: "退出",
         discordLink: "Discord链接",
         avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
+        popupConnect: "你必须用 Discord 登录才能下载。",
+        popupBtn: "登录",
     },
     ru: {
         searchPlaceholder: "Поиск читов...",
@@ -305,6 +311,8 @@ Welcome to our server! Before participating, please read and follow the rules be
         discordLogout: "Выйти",
         discordLink: "Ссылка Discord",
         avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
+        popupConnect: "Чтобы скачать, нужно войти через Discord.",
+        popupBtn: "Войти",
     },
     de: {
         searchPlaceholder: "Cheats suchen...",
@@ -342,6 +350,8 @@ Willkommen auf unserem Server! Bitte lies und beachte die folgenden Regeln, um e
         discordLogout: "Abmelden",
         discordLink: "Discord Link",
         avisNote: ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"],
+        popupConnect: "Du musst mit Discord verbunden sein, um herunterzuladen.",
+        popupBtn: "Anmelden",
     }
 };
 
@@ -401,6 +411,12 @@ function setLang(lang) {
             opt.textContent = langData[lang].avisNote[idx];
         });
     }
+
+    // Traduction du popup connexion
+    const popupText = document.getElementById('connect-popup-text');
+    if (popupText) popupText.textContent = langData[lang].popupConnect;
+    const popupBtn = document.getElementById('connect-popup-btn');
+    if (popupBtn) popupBtn.textContent = langData[lang].popupBtn;
 }
 
 const langSwitcher = document.getElementById('lang-switcher');
@@ -519,4 +535,64 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 5000); // 5s
     }
     handleDiscordOAuth();
+});
+
+// Ajoute le popup HTML au body
+function createConnectPopup() {
+    if (document.getElementById('connect-popup')) return;
+    const popup = document.createElement('div');
+    popup.id = 'connect-popup';
+    popup.innerHTML = `
+        <div class="connect-popup-content">
+            <span class="close" id="connect-popup-close">&times;</span>
+            <div id="connect-popup-text"></div>
+            <button id="connect-popup-btn" class="modern-btn"></button>
+        </div>
+    `;
+    document.body.appendChild(popup);
+    document.getElementById('connect-popup-close').onclick = () => {
+        popup.classList.remove('show');
+    };
+    document.getElementById('connect-popup-btn').onclick = () => {
+        popup.classList.remove('show');
+        document.getElementById('discord-login').click();
+    };
+}
+createConnectPopup();
+
+function showConnectPopup(lang) {
+    const popup = document.getElementById('connect-popup');
+    if (!popup) return;
+    document.getElementById('connect-popup-text').textContent = langData[lang].popupConnect;
+    document.getElementById('connect-popup-btn').textContent = langData[lang].popupBtn;
+    popup.classList.add('show');
+}
+
+// Bloque le téléchargement si non connecté (empêche tout accès)
+document.querySelectorAll('#cheat-list .download-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        const userStr = localStorage.getItem('discord_user');
+        if (!userStr) {
+            e.preventDefault();
+            showConnectPopup(langSwitcher ? langSwitcher.value : 'fr');
+            return false;
+        }
+    });
+    // Désactive le lien si pas connecté (empêche clic droit, copier, etc.)
+    btn.addEventListener('mousedown', function(e) {
+        const userStr = localStorage.getItem('discord_user');
+        if (!userStr) {
+            e.preventDefault();
+            showConnectPopup(langSwitcher ? langSwitcher.value : 'fr');
+            return false;
+        }
+    });
+    btn.addEventListener('contextmenu', function(e) {
+        const userStr = localStorage.getItem('discord_user');
+        if (!userStr) {
+            e.preventDefault();
+            showConnectPopup(langSwitcher ? langSwitcher.value : 'fr');
+            return false;
+        }
+    });
 });
