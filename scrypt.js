@@ -296,6 +296,7 @@ const discordUsername = document.getElementById('discord-username');
 function showDiscordLogin() {
     discordLoginBtn.style.display = '';
     discordUserContainer.style.display = 'none';
+    discordLogoutBtn.style.display = 'none';
 }
 function showDiscordUser(user) {
     discordLoginBtn.style.display = 'none';
@@ -309,6 +310,7 @@ function showDiscordUser(user) {
 function hideDiscordUser() {
     discordUserContainer.style.display = 'none';
     discordLoginBtn.style.display = '';
+    discordLogoutBtn.style.display = 'none';
 }
 
 function logoutDiscord() {
@@ -322,12 +324,10 @@ discordLoginBtn.onclick = () => {
 };
 discordLogoutBtn.onclick = logoutDiscord;
 
-// Gestion du code OAuth2 dans l'URL
 async function handleDiscordOAuth() {
     const params = new URLSearchParams(window.location.search);
     const code = params.get('code');
     if (code) {
-        // Échange le code contre un token
         try {
             // Utilisation d'un proxy CORS pour POST vers Discord (car CORS interdit côté client)
             // Remplacer par votre propre backend/proxy pour production
@@ -337,6 +337,8 @@ async function handleDiscordOAuth() {
                 body: `client_id=${DISCORD_CLIENT_ID}&client_secret=&grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify%20email%20guilds.join%20guilds`
             });
             const tokenData = await tokenRes.json();
+            // Ajout debug
+            console.log("Discord tokenData:", tokenData);
             if (tokenData.access_token) {
                 localStorage.setItem('discord_token', tokenData.access_token);
                 // Nettoie l'URL
@@ -344,9 +346,11 @@ async function handleDiscordOAuth() {
                 await fetchAndShowDiscordUser(tokenData.access_token);
             } else {
                 showDiscordLogin();
+                alert("Erreur Discord: Impossible de récupérer le token.");
             }
-        } catch {
+        } catch (e) {
             showDiscordLogin();
+            alert("Erreur Discord: " + e.message);
         }
     } else {
         // Si token déjà stocké, tente de récupérer l'utilisateur
@@ -354,7 +358,18 @@ async function handleDiscordOAuth() {
         if (token) {
             await fetchAndShowDiscordUser(token);
         } else {
-            showDiscordLogin();
+            // Fallback: si user déjà stocké, affiche-le (ex: refresh)
+            const userStr = localStorage.getItem('discord_user');
+            if (userStr) {
+                try {
+                    const user = JSON.parse(userStr);
+                    showDiscordUser(user);
+                } catch {
+                    showDiscordLogin();
+                }
+            } else {
+                showDiscordLogin();
+            }
         }
     }
 }
@@ -364,12 +379,13 @@ async function fetchAndShowDiscordUser(token) {
         const res = await fetch("https://discord.com/api/users/@me", {
             headers: { Authorization: "Bearer " + token }
         });
-        if (!res.ok) throw new Error();
+        if (!res.ok) throw new Error("Impossible de récupérer l'utilisateur Discord");
         const user = await res.json();
         localStorage.setItem('discord_user', JSON.stringify(user));
         showDiscordUser(user);
-    } catch {
+    } catch (e) {
         logoutDiscord();
+        alert("Erreur Discord: " + e.message);
     }
 }
 
