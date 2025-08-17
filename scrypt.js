@@ -30,30 +30,35 @@ window.addEventListener('resize', resize);
 resize();
 
 const colors = ['#e879f9', '#a855f7', '#ec4899', '#fff'];
-const stars = Array.from({length: 80}, () => ({
+const stars = Array.from({length: 120}, () => ({ // Augmente le nombre de points
     x: Math.random() * w,
     y: Math.random() * h,
-    r: Math.random() * 2 + 1,
+    r: Math.random() * 2.5 + 1.2, // Taille un peu plus grande
     color: colors[Math.floor(Math.random() * colors.length)],
-    dx: (Math.random() - 0.5) * 0.15,
-    dy: (Math.random() - 0.5) * 0.15
+    dx: (Math.random() - 0.5) * 0.35, // Vitesse plus rapide
+    dy: (Math.random() - 0.5) * 0.35,
+    pulse: Math.random() * Math.PI * 2 // Pour effet de pulsation
 }));
 
 function animateStars() {
     ctx.clearRect(0, 0, w, h);
     for (const star of stars) {
+        // Effet de pulsation
+        const pulseR = star.r + Math.sin(Date.now() / 350 + star.pulse) * 0.7;
         ctx.beginPath();
-        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+        ctx.arc(star.x, star.y, pulseR, 0, Math.PI * 2);
         ctx.fillStyle = star.color;
-        ctx.globalAlpha = 0.8;
+        ctx.globalAlpha = 0.85 + Math.sin(Date.now() / 400 + star.pulse) * 0.15;
+        ctx.shadowColor = star.color;
+        ctx.shadowBlur = 12 + Math.abs(Math.sin(Date.now() / 300 + star.pulse)) * 10;
         ctx.fill();
         ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
         star.x += star.dx;
         star.y += star.dy;
-        if (star.x < 0) star.x = w;
-        if (star.x > w) star.x = 0;
-        if (star.y < 0) star.y = h;
-        if (star.y > h) star.y = 0;
+        // Effet rebond sur les bords
+        if (star.x < 0 || star.x > w) star.dx *= -1;
+        if (star.y < 0 || star.y > h) star.dy *= -1;
     }
     requestAnimationFrame(animateStars);
 }
@@ -135,11 +140,35 @@ avisForm.onsubmit = async function(e) {
     }
 }
 
-// Animation curseur souris
-const mouseCursor = document.getElementById('mouse-cursor');
-window.addEventListener('mousemove', e => {
-    mouseCursor.style.left = e.clientX + 'px';
-    mouseCursor.style.top = e.clientY + 'px';
+// Animation sur le titre principal au survol
+const mainTitle = document.querySelector('.top-title .cheat-factory-glow');
+if (mainTitle) {
+    mainTitle.addEventListener('mouseenter', () => {
+        mainTitle.style.animation = 'glowPulse 0.7s infinite alternate, titlePopIn 0.7s cubic-bezier(.7,1.7,.6,1)';
+    });
+    mainTitle.addEventListener('mouseleave', () => {
+        mainTitle.style.animation = 'glowPulse 2s infinite alternate, titlePopIn 1.2s cubic-bezier(.7,1.7,.6,1)';
+    });
+}
+
+// Animation sur les box au clic
+document.querySelectorAll('.download-box').forEach(box => {
+    box.addEventListener('mousedown', () => {
+        box.style.transform = 'scale(0.97)';
+        setTimeout(() => {
+            box.style.transform = '';
+        }, 180);
+    });
+});
+
+// Animation sur les boutons au clic
+document.querySelectorAll('.modern-btn').forEach(btn => {
+    btn.addEventListener('mousedown', () => {
+        btn.style.transform = 'scale(0.96)';
+        setTimeout(() => {
+            btn.style.transform = '';
+        }, 120);
+    });
 });
 
 // Barre de recherche cheat
@@ -294,7 +323,7 @@ Welcome to our server! Before participating, please read and follow the rules be
 <b>Реклама:</b> Реклама других серверов, продуктов или услуг без разрешения администрации запрещена.<br><br>
 <b>Использование каналов:</b> Каждый канал имеет свою тему. Соблюдайте тематику и используйте правильный канал.<br><br>
 <b>Помощь и тикеты:</b> Если есть вопрос или проблема, используйте систему тикетов (НЕ ПИШИТЕ В ЛС АДМИНАМ ИЛИ ОСНОВАТЕЛЮ). Мы поможем!<br><br>
-<b>Читы и хаки:</b> Использование или распространение неразрешённых инструментов вне сервера запрещено. Нарушения на вашей ответственности.<br><br>
+<b>Читы и хаки:</b> Использование или распространение неразрешённых инструментов вне сервера запрещено. Нарушения лежат на вашей ответственности.<br><br>
 <b>Уважение к модераторам:</b> Решения модераторов должны уважаться. В случае несогласия обсуждайте спокойно.<br><br>
 <b>Санкции:</b> Нарушение правил может привести к предупреждению, кику или бану в зависимости от тяжести.
         `,
@@ -537,6 +566,9 @@ window.addEventListener('DOMContentLoaded', () => {
     handleDiscordOAuth();
 });
 
+// Supprime l'animation curseur souris personnalisée
+// (Supprime ou commente tout le bloc lié à #mouse-cursor)
+
 // Ajoute le popup HTML au body
 function createConnectPopup() {
     if (document.getElementById('connect-popup')) return;
@@ -596,3 +628,100 @@ document.querySelectorAll('#cheat-list .download-btn').forEach(btn => {
         }
     });
 });
+
+// Burger menu logic
+const burgerMenu = document.getElementById('burger-menu');
+const burgerIcon = burgerMenu.querySelector('.burger-icon');
+const burgerPanel = burgerMenu.querySelector('.burger-panel');
+const burgerAvatar = document.getElementById('burger-avatar');
+const burgerUsername = document.getElementById('burger-username');
+const burgerLogin = document.getElementById('burger-login');
+const burgerLogout = document.getElementById('burger-logout');
+const burgerLangSwitcher = document.getElementById('burger-lang-switcher');
+
+burgerIcon.onclick = () => {
+    burgerMenu.classList.toggle('open');
+};
+
+function updateBurgerUser() {
+    const userStr = localStorage.getItem('discord_user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            burgerAvatar.src = user.avatar
+                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+                : 'https://cdn.discordapp.com/embed/avatars/0.png';
+            burgerUsername.textContent = user.username + (user.discriminator ? '#' + user.discriminator : '');
+            burgerLogin.style.display = 'none';
+            burgerLogout.style.display = '';
+        } catch {
+            burgerAvatar.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+            burgerUsername.textContent = '';
+            burgerLogin.style.display = '';
+            burgerLogout.style.display = 'none';
+        }
+    } else {
+        burgerAvatar.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
+        burgerUsername.textContent = '';
+        burgerLogin.style.display = '';
+        burgerLogout.style.display = 'none';
+    }
+}
+updateBurgerUser();
+
+burgerLogin.onclick = () => {
+    window.location.href = OAUTH_URL;
+};
+burgerLogout.onclick = () => {
+    logoutDiscord();
+    updateBurgerUser();
+};
+
+burgerLangSwitcher.value = langSwitcher.value;
+burgerLangSwitcher.onchange = function() {
+    langSwitcher.value = this.value;
+    setLang(this.value);
+};
+
+langSwitcher.onchange = function() {
+    burgerLangSwitcher.value = this.value;
+    setLang(this.value);
+};
+
+// Met à jour le burger à chaque changement d'utilisateur
+function showDiscordUser(user) {
+    discordLoginBtn.style.display = 'none';
+    discordUserContainer.style.display = 'flex';
+    discordAvatar.src = user.avatar
+        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+        : 'https://cdn.discordapp.com/embed/avatars/0.png';
+    discordUsername.textContent = user.username + (user.discriminator ? '#' + user.discriminator : '');
+    discordLogoutBtn.style.display = '';
+
+    updateBurgerUser();
+}
+function showDiscordLogin() {
+    // N'affiche le bouton de connexion que si aucun user n'est stocké
+    const userStr = localStorage.getItem('discord_user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            showDiscordUser(user);
+            return;
+        } catch {
+            // Si parsing échoue, on affiche le bouton
+        }
+    }
+    discordLoginBtn.style.display = '';
+    discordUserContainer.style.display = 'none';
+    discordLogoutBtn.style.display = 'none';
+
+    updateBurgerUser();
+}
+function logoutDiscord() {
+    localStorage.removeItem('discord_token');
+    localStorage.removeItem('discord_user');
+    showDiscordLogin();
+
+    updateBurgerUser();
+}
