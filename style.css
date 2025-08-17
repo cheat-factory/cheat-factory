@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     padding: 0;
@@ -482,7 +481,7 @@ body {
     z-index: 10;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 .lang-switcher {
     background: #23232b;
@@ -509,5 +508,27 @@ body {
 
 /* Ajout pour l'affichage utilisateur Discord */
 #discord-user-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     min-width: 120px;
+}
+#discord-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 2px solid #a855f7;
+    box-shadow: 0 2px 8px #a855f7;
+}
+#discord-username {
+    color: #fff;
+    font-size: 1em;
+    font-weight: 600;
+    margin-right: 8px;
+}
+#discord-logout {
+    padding: 0.2em 1em;
+    font-size: 0.95em;
+    margin-left: 0;
 }
