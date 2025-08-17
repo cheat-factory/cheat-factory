@@ -1,329 +1,682 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cheat Factory - Premium Gaming Tools</title>
-    <link rel="stylesheet" href="style-modern.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-</head>
-<body>
-    <!-- Loader animé -->
-    <div id="loader">
-        <div class="loader-content">
-            <div class="loader-logo">
-                <img src="images/logo.png" alt="Logo">
-            </div>
-            <div class="loader-bar">
-                <div class="loader-progress"></div>
-            </div>
-            <div class="loader-text">Chargement...</div>
-        </div>
-    </div>
+// Configuration Discord
+const DISCORD_CLIENT_ID = "1406428707681472612";
+// Utilise l'URL exacte de la page (compatible GitHub Pages: https://cheat-factory.github.io/<repo>/...)
+const REDIRECT_URI = window.location.origin + window.location.pathname;
+const OAUTH_SCOPE = "identify%20email";
+const OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${OAUTH_SCOPE}`;
 
-    <!-- Particules animées en arrière-plan -->
-    <canvas id="particles"></canvas>
-    <!-- Arrière-plan animé responsive (change selon le thème) -->
-    <div id="bg-animated"></div>
+// Données des cheats
+const cheatsData = [
+    {
+        id: 'mhur',
+        title: 'MHUR Cheat',
+        image: 'images/mhur-cheat.png',
+        description: 'Cheat puissant pour dominer vos parties',
+        link: 'https://gofile.io/d/WDS4RL',
+        status: 'active',
+        category: 'new'
+    },
+    {
+        id: 'fortnite-external',
+        title: 'Fortnite External',
+        image: 'images/fortnite-external.png',
+        description: 'ESP, Aimbot et plus pour Fortnite',
+        link: 'https://gofile.io/d/egzLif',
+        status: 'active',
+        category: 'popular'
+    },
+    {
+        id: 'vigor',
+        title: 'Vigor Internal',
+        image: 'images/vigor-internal.png',
+        description: 'Cheat internal pour Vigor',
+        link: '#',
+        status: 'down',
+        category: 'internal'
+    },
+    {
+        id: 'fivem',
+        title: 'FiveM External',
+        image: 'images/fivem-external.png',
+        description: 'Hack pour serveurs FiveM',
+        link: 'https://gofile.io/d/6MZQG6',
+        status: 'active',
+        category: 'external'
+    },
+    {
+        id: 'paladin',
+        title: 'Paladin Internal',
+        image: 'images/paladin-internal.png',
+        description: 'Cheat complet pour Paladins',
+        link: 'https://gofile.io/d/o7wSdy',
+        status: 'active',
+        category: 'internal'
+    },
+    {
+        id: 'cs2',
+        title: 'CS2 Internal',
+        image: 'images/cs2-internal.png',
+        description: 'Hack pour Counter-Strike 2',
+        link: '#',
+        status: 'down',
+        category: 'fps'
+    },
+    {
+        id: 'rogue',
+        title: 'Rogue Company External',
+        image: 'images/rogue-company.jpg',
+        description: 'ESP et Aimbot pour Rogue Company',
+        link: '#',
+        status: 'down',
+        category: 'external'
+    },
+    {
+        id: 'spoofer',
+        title: 'Temps Spoofer',
+        image: 'images/temps-spoofer.png',
+        description: 'Spoofer pour contourner les bans',
+        link: '#',
+        status: 'down',
+        category: 'tools'
+    }
+];
+
+// État de l'application
+let currentUser = null;
+let currentFilter = 'all';
+// Gestionnaire global des particules pour changer d'animation selon le thème
+let particlesManager = null;
+
+// Initialisation
+document.addEventListener('DOMContentLoaded', () => {
+    // Masquer le loader après 2 secondes
+    setTimeout(() => {
+        const loader = document.getElementById('loader');
+        if (loader) {
+            loader.classList.add('hidden');
+        }
+    }, 2000);
     
-    <!-- Header moderne avec glassmorphism -->
-    <header class="header-glass">
-        <nav class="navbar">
-            <div class="nav-logo">
-                <img src="images/logo.png" alt="Cheat Factory">
-                <span class="logo-text">Cheat Factory</span>
+    initParticles();
+    initNavigation();
+    initDiscordAuth();
+    initCheats();
+    initFilters();
+    initSearch();
+    initReviews();
+    initAnimations();
+    initTheme();
+});
+
+// Particules animées
+function initParticles() {
+    const canvas = document.getElementById('particles');
+    if (!canvas) return;
+
+    class ParticlesManager {
+        constructor(canvas) {
+            this.canvas = canvas;
+            this.ctx = canvas.getContext('2d');
+            this.particles = [];
+            this.mode = document.body.classList.contains('light-theme') ? 'light' : 'dark';
+            this.animationId = null;
+            this.colorsLight = [
+                '139, 92, 246', // primary
+                '236, 72, 153', // secondary
+                '59, 130, 246'  // accent (blue)
+            ];
+            this.resize = this.resize.bind(this);
+            this.animate = this.animate.bind(this);
+            this.resize();
+            this.reset();
+            this.animate();
+            window.addEventListener('resize', this.resize);
+        }
+
+        resize() {
+            this.canvas.width = window.innerWidth;
+            this.canvas.height = window.innerHeight;
+            // Recréer quelques particules pour remplir l'écran après redimensionnement
+            this.reset();
+        }
+
+        setMode(mode) {
+            if (mode !== 'light' && mode !== 'dark') return;
+            if (this.mode === mode) return;
+            this.mode = mode;
+            this.reset();
+        }
+
+        reset() {
+            this.particles = [];
+            if (this.mode === 'dark') {
+                const count = 100;
+                for (let i = 0; i < count; i++) {
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        r: Math.random() * 2 + 0.5,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        a: Math.random() * 0.5 + 0.2
+                    });
+                }
+            } else {
+                const count = 60;
+                for (let i = 0; i < count; i++) {
+                    const speedY = -0.2 - Math.random() * 0.4; // monte doucement
+                    this.particles.push({
+                        x: Math.random() * this.canvas.width,
+                        y: Math.random() * this.canvas.height,
+                        r: Math.random() * 8 + 3,
+                        vx: (Math.random() - 0.5) * 0.3,
+                        vy: speedY,
+                        drift: (Math.random() - 0.5) * 0.002,
+                        color: this.colorsLight[Math.floor(Math.random() * this.colorsLight.length)],
+                        a: Math.random() * 0.18 + 0.08
+                    });
+                }
+            }
+        }
+
+        updateAndDrawDark() {
+            const ctx = this.ctx;
+            ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // points
+            for (const p of this.particles) {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0 || p.x > this.canvas.width) p.vx *= -1;
+                if (p.y < 0 || p.y > this.canvas.height) p.vy *= -1;
+
+                ctx.fillStyle = `rgba(139, 92, 246, ${p.a})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // lignes
+            for (let i = 0; i < this.particles.length; i++) {
+                const p1 = this.particles[i];
+                for (let j = i + 1; j < this.particles.length; j++) {
+                    const p2 = this.particles[j];
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.hypot(dx, dy);
+                    if (dist < 100) {
+                        const alpha = 0.12 * (1 - dist / 100);
+                        this.ctx.strokeStyle = `rgba(139, 92, 246, ${alpha})`;
+                        this.ctx.lineWidth = 0.5;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(p1.x, p1.y);
+                        this.ctx.lineTo(p2.x, p2.y);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        updateAndDrawLight() {
+            const ctx = this.ctx;
+            ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+            // bulles flottantes
+            for (const p of this.particles) {
+                p.vx += p.drift; // légère dérive horizontale
+                p.x += p.vx;
+                p.y += p.vy;
+
+                // Respawn quand sort de l'écran
+                if (p.y + p.r < 0) {
+                    p.y = this.canvas.height + p.r;
+                    p.x = Math.random() * this.canvas.width;
+                }
+                if (p.x - p.r > this.canvas.width) p.x = -p.r;
+                if (p.x + p.r < 0) p.x = this.canvas.width + p.r;
+
+                const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
+                grd.addColorStop(0, `rgba(${p.color}, ${Math.min(p.a * 1.5, 0.35)})`);
+                grd.addColorStop(1, `rgba(${p.color}, 0)`);
+
+                ctx.fillStyle = grd;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        animate() {
+            if (this.mode === 'dark') {
+                this.updateAndDrawDark();
+            } else {
+                this.updateAndDrawLight();
+            }
+            this.animationId = requestAnimationFrame(this.animate);
+        }
+
+        destroy() {
+            cancelAnimationFrame(this.animationId);
+            window.removeEventListener('resize', this.resize);
+            this.particles = [];
+        }
+    }
+
+    particlesManager = new ParticlesManager(canvas);
+}
+
+// Navigation smooth scroll
+function initNavigation() {
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+            const href = link.getAttribute('href');
+            // Gérer uniquement les liens internes commençant par #
+            if (href && href.startsWith('#')) {
+                e.preventDefault();
+                const targetId = href.substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth' });
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    link.classList.add('active');
+                }
+            }
+        });
+    });
+    
+    // Mobile menu toggle
+    const navToggle = document.getElementById('nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    
+    navToggle?.addEventListener('click', () => {
+        navMenu.classList.toggle('active');
+        navToggle.classList.toggle('active');
+    });
+}
+
+// Fonction pour faire défiler vers une section
+window.scrollToSection = function(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// Discord Authentication
+function initDiscordAuth() {
+    const authBtn = document.getElementById('discord-auth');
+    const userProfile = document.getElementById('user-profile');
+    const logoutBtn = document.getElementById('logout-btn');
+    
+    // Vérifier si on a un token dans l'URL
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    
+    if (accessToken) {
+        localStorage.setItem('discord_token', accessToken);
+        window.location.hash = '';
+        fetchDiscordUser(accessToken);
+    } else {
+        // Vérifier le token sauvegardé
+        const savedToken = localStorage.getItem('discord_token');
+        if (savedToken) {
+            fetchDiscordUser(savedToken);
+        }
+    }
+    
+    authBtn?.addEventListener('click', () => {
+        window.location.href = OAUTH_URL;
+    });
+    
+    logoutBtn?.addEventListener('click', () => {
+        localStorage.removeItem('discord_token');
+        localStorage.removeItem('discord_user');
+        currentUser = null;
+        showAuthButton();
+    });
+}
+
+async function fetchDiscordUser(token) {
+    try {
+        const response = await fetch('https://discord.com/api/users/@me', {
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        if (!response.ok) throw new Error('Token invalide');
+        
+        const user = await response.json();
+        currentUser = user;
+        localStorage.setItem('discord_user', JSON.stringify(user));
+        showUserProfile(user);
+    } catch (error) {
+        console.error('Erreur auth:', error);
+        localStorage.removeItem('discord_token');
+        showAuthButton();
+    }
+}
+
+function showUserProfile(user) {
+    const authBtn = document.getElementById('discord-auth');
+    const userProfile = document.getElementById('user-profile');
+    const userAvatar = document.getElementById('user-avatar');
+    const userName = document.getElementById('user-name');
+    
+    if (authBtn) authBtn.style.display = 'none';
+    if (userProfile) userProfile.style.display = 'flex';
+    
+    if (userAvatar) {
+        userAvatar.src = user.avatar 
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+            : 'https://cdn.discordapp.com/embed/avatars/0.png';
+    }
+    
+    if (userName) {
+        userName.textContent = user.username;
+    }
+}
+
+function showAuthButton() {
+    const authBtn = document.getElementById('discord-auth');
+    const userProfile = document.getElementById('user-profile');
+    
+    if (authBtn) authBtn.style.display = 'flex';
+    if (userProfile) userProfile.style.display = 'none';
+}
+
+// Générer les cartes de cheats
+function initCheats() {
+    const cheatsGrid = document.getElementById('cheats-grid');
+    if (!cheatsGrid) return;
+    
+    cheatsData.forEach(cheat => {
+        const card = document.createElement('div');
+        card.className = 'cheat-card';
+        card.dataset.status = cheat.status;
+        card.dataset.category = cheat.category;
+        
+        card.innerHTML = `
+            <img src="${cheat.image}" alt="${cheat.title}" class="cheat-image">
+            <div class="cheat-content">
+                <div class="cheat-header">
+                    <h3 class="cheat-title">${cheat.title}</h3>
+                    <span class="cheat-status ${cheat.status === 'active' ? 'status-active' : 'status-down'}">
+                        ${cheat.status === 'active' ? 'Actif' : 'Hors ligne'}
+                    </span>
+                </div>
+                <p class="cheat-description">${cheat.description}</p>
+                <button class="cheat-download" ${cheat.status === 'down' ? 'disabled' : ''} 
+                        onclick="downloadCheat('${cheat.link}')">
+                    ${cheat.status === 'active' ? 'Télécharger' : 'Indisponible'}
+                </button>
             </div>
+        `;
+        
+        cheatsGrid.appendChild(card);
+    });
+}
+
+// Fonction de téléchargement
+window.downloadCheat = function(link) {
+    if (!currentUser) {
+        alert('Veuillez vous connecter avec Discord pour télécharger');
+        document.getElementById('discord-auth')?.click();
+        return;
+    }
+    
+    if (link && link !== '#') {
+        window.open(link, '_blank');
+    }
+}
+
+// Filtres
+function initFilters() {
+    const chips = document.querySelectorAll('.chip');
+    
+    chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            chips.forEach(c => c.classList.remove('active'));
+            chip.classList.add('active');
             
-            <ul class="nav-menu">
-                <li><a href="#home" class="nav-link active">Accueil</a></li>
-                <li><a href="#cheats" class="nav-link">Cheats</a></li>
-                <li><a href="#features" class="nav-link">Features</a></li>
-                <li><a href="#reviews" class="nav-link">Avis</a></li>
-                <li><a href="https://discord.gg/vT4XcxYj9t" class="nav-link" target="_blank" rel="noopener">Contact</a></li>
-            </ul>
+            const filter = chip.dataset.filter;
+            filterCheats(filter);
+        });
+    });
+}
 
-            <div class="nav-actions">
-                <button class="theme-toggle" id="theme-toggle">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <button class="discord-auth-btn" id="discord-auth">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                    </svg>
-                    <span>Connexion</span>
-                </button>
-                <div class="user-profile" id="user-profile" style="display:none;">
-                    <img src="" alt="Avatar" class="user-avatar" id="user-avatar">
-                    <span class="user-name" id="user-name"></span>
-                    <button class="logout-btn" id="logout-btn">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
+function filterCheats(filter) {
+    const cards = document.querySelectorAll('.cheat-card');
+    
+    cards.forEach(card => {
+        if (filter === 'all') {
+            card.style.display = 'block';
+        } else if (filter === 'active') {
+            card.style.display = card.dataset.status === 'active' ? 'block' : 'none';
+        } else if (filter === 'down') {
+            card.style.display = card.dataset.status === 'down' ? 'block' : 'none';
+        } else if (filter === 'new') {
+            card.style.display = card.dataset.category === 'new' ? 'block' : 'none';
+        }
+    });
+}
 
-            <div class="nav-toggle" id="nav-toggle">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
-    </header>
+// Recherche
+function initSearch() {
+    const searchInput = document.getElementById('search-cheats');
+    if (!searchInput) return;
+    
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const cards = document.querySelectorAll('.cheat-card');
+        
+        cards.forEach(card => {
+            const title = card.querySelector('.cheat-title').textContent.toLowerCase();
+            const description = card.querySelector('.cheat-description').textContent.toLowerCase();
+            
+            if (title.includes(query) || description.includes(query)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+}
 
-    <!-- Hero Section avec effet parallax -->
-    <section id="home" class="hero-section">
-        <div class="hero-bg">
-            <div class="hero-gradient"></div>
-        </div>
-        <div class="hero-content">
-            <div class="hero-badge">🎮 Premium Gaming Tools</div>
-            <h1 class="hero-title">
-                <span class="gradient-text">Cheat Factory</span>
-            </h1>
-            <p class="hero-subtitle">
-                Découvrez notre collection exclusive de cheats premium, 
-                testés et approuvés par notre communauté
-            </p>
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <div class="stat-number" data-count="1500">0</div>
-                    <div class="stat-label">Utilisateurs actifs</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" data-count="8">0</div>
-                    <div class="stat-label">Cheats disponibles</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" data-count="99">0</div>
-                    <div class="stat-label">% Satisfaction</div>
-                </div>
-            </div>
-            <div class="hero-actions">
-                <button class="btn-primary" onclick="scrollToSection('cheats')">
-                    <span>Explorer les cheats</span>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                </button>
-                <a href="https://discord.gg/vT4XcxYj9t" class="btn-secondary">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                    </svg>
-                    <span>Rejoindre Discord</span>
-                </a>
-            </div>
-        </div>
-        <div class="scroll-indicator">
-            <div class="mouse">
-                <div class="wheel"></div>
-            </div>
-            <span>Défiler pour explorer</span>
-        </div>
-    </section>
+// Reviews
+function initReviews() {
+    const addReviewBtn = document.getElementById('add-review-btn');
+    const reviewModal = document.getElementById('review-modal');
+    const closeModal = document.getElementById('close-review-modal');
+    const reviewForm = document.getElementById('review-form');
+    const stars = document.querySelectorAll('.star');
+    
+    let selectedRating = 5;
+    
+    addReviewBtn?.addEventListener('click', () => {
+        if (!currentUser) {
+            alert('Veuillez vous connecter avec Discord pour laisser un avis');
+            document.getElementById('discord-auth')?.click();
+            return;
+        }
+        reviewModal.classList.add('active');
+    });
+    
+    closeModal?.addEventListener('click', () => {
+        reviewModal.classList.remove('active');
+    });
+    
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            selectedRating = parseInt(star.dataset.rating);
+            stars.forEach((s, index) => {
+                if (index < selectedRating) {
+                    s.classList.add('active');
+                } else {
+                    s.classList.remove('active');
+                }
+            });
+        });
+    });
+    
+    reviewForm?.addEventListener('submit', (e) => {
+        e.preventDefault();
+        // Ici tu peux ajouter la logique pour envoyer l'avis
+        alert('Merci pour votre avis !');
+        reviewModal.classList.remove('active');
+        reviewForm.reset();
+    });
+}
 
-    <!-- Section Cheats avec filtres -->
-    <section id="cheats" class="cheats-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="gradient-text">Nos Cheats Premium</span>
-                </h2>
-                <p class="section-subtitle">Sélectionnez votre jeu et dominez la partie</p>
-            </div>
+// Animations
+function initAnimations() {
+    // Animation des compteurs
+    const counters = document.querySelectorAll('.stat-number');
+    
+    counters.forEach(counter => {
+        const target = parseInt(counter.dataset.count);
+        const increment = target / 100;
+        let current = 0;
+        
+        const updateCounter = () => {
+            current += increment;
+            if (current < target) {
+                counter.textContent = Math.ceil(current);
+                requestAnimationFrame(updateCounter);
+            } else {
+                counter.textContent = target;
+            }
+        };
+        
+        // Démarre l'animation quand l'élément est visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    updateCounter();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+        
+        observer.observe(counter);
+    });
+}
 
-            <!-- Barre de recherche et filtres -->
-            <div class="filters-container">
-                <div class="search-box">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="11" cy="11" r="8"/>
-                        <path d="m21 21-4.35-4.35"/>
-                    </svg>
-                    <input type="text" id="search-cheats" placeholder="Rechercher un cheat...">
-                </div>
-                <div class="filter-chips">
-                    <button class="chip active" data-filter="all">Tous</button>
-                    <button class="chip" data-filter="active">Actifs</button>
-                    <button class="chip" data-filter="down">Hors ligne</button>
-                    <button class="chip" data-filter="new">Nouveaux</button>
-                </div>
-            </div>
+// Theme Toggle amélioré
+function initTheme() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.querySelector('.theme-icon');
+    
+    // Vérifier le thème sauvegardé ou préférence système
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    
+    // Appliquer le thème initial
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-theme');
+        if (themeIcon) themeIcon.textContent = '☀️';
+        // Basculer l'animation de fond
+        particlesManager?.setMode('light');
+    const particles = document.getElementById('particles');
+    if (particles) particles.style.opacity = '0.45';
+    } else {
+        document.body.classList.remove('light-theme');
+        if (themeIcon) themeIcon.textContent = '🌙';
+        particlesManager?.setMode('dark');
+    const particles = document.getElementById('particles');
+    if (particles) particles.style.opacity = '1';
+    }
+    
+    // Gérer le clic sur le bouton
+    themeToggle?.addEventListener('click', () => {
+        const isLight = document.body.classList.toggle('light-theme');
+        const newTheme = isLight ? 'light' : 'dark';
+        
+        localStorage.setItem('theme', newTheme);
+        
+        // Animation de rotation pour l'icône
+        if (themeIcon) {
+            themeIcon.style.transform = 'rotate(360deg)';
+            themeIcon.textContent = isLight ? '☀️' : '🌙';
+            
+            setTimeout(() => {
+                themeIcon.style.transform = '';
+            }, 300);
+        }
+        
+        // Adapter l'opacité et le style des particules
+        const particles = document.getElementById('particles');
+        if (particles) {
+            particles.style.opacity = isLight ? '0.45' : '1';
+        }
+        particlesManager?.setMode(newTheme === 'light' ? 'light' : 'dark');
+        
+        // Notification visuelle du changement
+        showThemeChangeNotification(newTheme);
+    });
+    
+    // Écouter les changements de préférence système
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            const isDark = e.matches;
+            document.body.classList.toggle('light-theme', !isDark);
+            if (themeIcon) themeIcon.textContent = isDark ? '🌙' : '☀️';
+            const particles = document.getElementById('particles');
+            if (particles) particles.style.opacity = !isDark ? '0.45' : '1';
+            particlesManager?.setMode(!isDark ? 'light' : 'dark');
+        }
+    });
+}
 
-            <!-- Grille de cheats -->
-            <div class="cheats-grid" id="cheats-grid">
-                <!-- Les cartes seront générées dynamiquement -->
-            </div>
-        </div>
-    </section>
+// Fonction pour afficher une notification de changement de thème
+function showThemeChangeNotification(theme) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        padding: 12px 20px;
+        background: var(--gradient);
+        color: white;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 9999;
+        animation: slideInRight 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    `;
+    notification.textContent = theme === 'light' ? '☀️ Mode jour activé' : '🌙 Mode nuit activé';
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
+}
 
-    <!-- Section Features -->
-    <section id="features" class="features-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="gradient-text">Pourquoi nous choisir ?</span>
-                </h2>
-                <p class="section-subtitle">Des avantages exclusifs pour notre communauté</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                        </svg>
-                    </div>
-                    <h3>Mises à jour régulières</h3>
-                    <p>Nos cheats sont constamment mis à jour pour rester indétectables</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                        </svg>
-                    </div>
-                    <h3>Sécurité maximale</h3>
-                    <p>Protection anti-ban et système de sécurité avancé</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-                        </svg>
-                    </div>
-                    <h3>100% Gratuit</h3>
-                    <p>Tous nos cheats sont entièrement gratuits et accessibles</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
-                        </svg>
-                    </div>
-                    <h3>Communauté active</h3>
-                    <p>Support 24/7 sur Discord avec plus de 1500 membres</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Section Reviews -->
-    <section id="reviews" class="reviews-section">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">
-                    <span class="gradient-text">Avis de la communauté</span>
-                </h2>
-                <p class="section-subtitle">Ce que nos utilisateurs pensent de nous</p>
-            </div>
-
-            <div class="reviews-slider" id="reviews-slider">
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">JD</div>
-                        <div class="review-info">
-                            <h4>JohnDoe42</h4>
-                            <div class="review-stars">⭐⭐⭐⭐⭐</div>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        "Les meilleurs cheats que j'ai trouvés ! Toujours à jour et le support est incroyable."
-                    </p>
-                    <div class="review-date">Il y a 2 jours</div>
-                </div>
-
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">SK</div>
-                        <div class="review-info">
-                            <h4>ShadowKiller</h4>
-                            <div class="review-stars">⭐⭐⭐⭐⭐</div>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        "Facile à utiliser et très efficace. La communauté Discord est super active !"
-                    </p>
-                    <div class="review-date">Il y a 5 jours</div>
-                </div>
-
-                <div class="review-card">
-                    <div class="review-header">
-                        <div class="review-avatar">NX</div>
-                        <div class="review-info">
-                            <h4>NinjaX</h4>
-                            <div class="review-stars">⭐⭐⭐⭐</div>
-                        </div>
-                    </div>
-                    <p class="review-text">
-                        "Très bon site, les cheats fonctionnent parfaitement. Je recommande !"
-                    </p>
-                    <div class="review-date">Il y a 1 semaine</div>
-                </div>
-            </div>
-
-            <button class="btn-primary" id="add-review-btn">
-                <span>Laisser un avis</span>
-            </button>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <img src="images/logo.png" alt="Logo" class="footer-logo">
-                    <h3>Cheat Factory</h3>
-                    <p>Premium gaming tools depuis 2024</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Liens rapides</h4>
-                    <ul>
-                        <li><a href="#home">Accueil</a></li>
-                        <li><a href="#cheats">Cheats</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#reviews">Avis</a></li>
-                    </ul>
-                </div>
-                <div class="footer-social">
-                    <h4>Nous suivre</h4>
-                    <div class="social-links">
-                        <a href="https://discord.gg/vT4XcxYj9t" class="social-link">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Cheat Factory. Développé avec ❤️ par Jules</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Modals -->
-    <div class="modal" id="review-modal">
-        <div class="modal-content">
-            <button class="modal-close" id="close-review-modal">&times;</button>
-            <h3>Laisser un avis</h3>
-            <form id="review-form">
-                <input type="text" placeholder="Votre pseudo" required>
-                <div class="star-rating">
-                    <span class="star" data-rating="1">⭐</span>
-                    <span class="star" data-rating="2">⭐</span>
-                    <span class="star" data-rating="3">⭐</span>
-                    <span class="star" data-rating="4">⭐</span>
-                    <span class="star" data-rating="5">⭐</span>
-                </div>
-                <textarea placeholder="Votre avis..." required></textarea>
-                <button type="submit" class="btn-primary">Envoyer</button>
-            </form>
-        </div>
-    </div>
-
-    <script src="script-modern.js"></script>
-</body>
-</html>
+// Ajouter les animations pour la notification
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
