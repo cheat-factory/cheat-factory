@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Factory</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="intro-logo">
+        <div class="intro-logo-content">
+            <img src="https://cdn.discordapp.com/attachments/1404118998869872783/1404856758970749090/5RYHznj.png?ex=68a1fc50&is=68a0aad0&hm=64bf8ce7f3ac5f5079adeca9c8fa4785610f62fb45f4992f65cc721bf4f585ff&" alt="Cheat Factory Logo">
+            <h1 class="cheat-factory-glow intro-glow-text">Cheat Factory</h1>
+        </div>
+    </div>
+    <!-- Ajout du logo en haut à gauche -->
+    <a href="https://discord.gg/vT4XcxYj9t" id="logo-top-left">
+        <img src="https://cdn.discordapp.com/attachments/1404118998869872783/1404856758970749090/5RYHznj.png?ex=68a1fc50&is=68a0aad0&hm=64bf8ce7f3ac5f5079adeca9c8fa4785610f62fb45f4992f65cc721bf4f585ff&" alt="Cheat Factory Logo" />
+    </a>
+    <canvas id="stars-bg"></canvas>
+    <!-- <div id="mouse-cursor"></div> --> <!-- Désactivé -->
+    <div class="top-title">
+        <h1 class="cheat-factory-glow">Cheat Factory</h1>
+        <div class="btn-group">
+            <button class="modern-btn" id="btn-termes">Termes</button>
+            <button class="modern-btn" id="btn-avis">Avis</button>
+        </div>
+        <div class="search-bar-container">
+            <div class="search-bar">
+                <span class="search-icon">&#128269;</span>
+                <input type="text" id="cheat-search" placeholder="Rechercher des cheats...">
+            </div>
+        </div>
+        <div class="lang-switcher-container">
+            <div id="discord-user-container" style="display:none;flex-direction:row;align-items:center;gap:10px;margin-right:0;">
+                <img id="discord-avatar" src="" alt="Discord Avatar" style="width:38px;height:38px;border-radius:50%;border:2px solid #a855f7;box-shadow:0 2px 8px #a855f7;">
+                <span id="discord-username" style="color:#fff;font-size:1em;font-weight:600;margin-right:8px;"></span>
+                <button id="discord-logout" class="modern-btn" style="padding:0.2em 1em;font-size:0.95em;display:none;">Déconnexion</button>
+            </div>
+            <select id="lang-switcher" class="lang-switcher">
+                <option value="fr">&#x1F1EB;&#x1F1F7; Français</option>
+                <option value="en">&#x1F1EC;&#x1F1E7; English</option>
+                <option value="zh">&#x1F1E8;&#x1F1F3; 中文</option>
+                <option value="ru">&#x1F1F7;&#x1F1FA; Русский</option>
+                <option value="de">&#x1F1E9;&#x1F1EA; Deutsch</option>
+            </select>
+            <button id="discord-login" class="modern-btn" style="padding:0.2em 1em;font-size:0.95em;display:none;margin-left:8px;">Connexion Discord</button>
+        </div>
+        <div class="box-list-container">
+            <div class="box-list" id="cheat-list">
+                <div class="download-box fortnite-box">
+                    <img src="https://cdn.discordapp.com/attachments/1304446845057110088/1405611508116885666/image.png?ex=68a2183a&is=68a0c6ba&hm=82730c7dc8e5dc6f2e3a215108a6995a89af82110c7e9c5d39175370007377f2&" alt="MHUR Cheat" class="box-img">
+                    <div class="box-title">MHUR Cheat</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">Update</span>
+                    </div>
+                    <a href="https://gofile.io/d/WDS4RL" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+                <div class="download-box fortnite-box">
+                    <img src="https://media.discordapp.net/attachments/1401989249238040626/1402311886141395024/image.png?ex=68a1f4b7&is=68a0a337&hm=b0696ee36c8abf7ac03262b42f6a16d7abae6bfff479c0d0667e7bf63aa8deff&=&format=webp&quality=lossless&width=1297&height=893" alt="Fortnite External" class="box-img">
+                    <div class="box-title">Fortnite External</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">Update</span>
+                    </div>
+                    <a href="https://gofile.io/d/egzLif" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+                <div class="download-box fortnite-box down">
+                    <img src="https://cdn.discordapp.com/attachments/1405298851367096451/1406403106039922780/image_2.png?ex=68a25676&is=68a104f6&hm=479d38c84a4df833afcbbf32015c340c260d9b5d7e7abdb34695be04464fab8d&" alt="Vigor Internal" class="box-img">
+                    <div class="box-title">Vigor Internal</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">DOWN</span>
+                    </div>
+                    <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7XDbfc6TyxCCuPDsUCKP0WqbrrXfqQPWTGQ&s" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+                <div class="download-box fortnite-box">
+                    <img src="https://cdn.discordapp.com/attachments/1402237965366988800/1404577086492119120/image.png?ex=68a1a099&is=68a04f19&hm=15d85e0fdc8bbb846ab84d163bcf0f04e8e639fbb3eddf9b5fcfaeea25e5d551&" alt="FiveM External" class="box-img">
+                    <div class="box-title">FiveM External</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">Update</span>
+                    </div>
+                    <a href="https://gofile.io/d/6MZQG6" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+                <div class="download-box fortnite-box">
+                    <img src="https://cdn.discordapp.com/attachments/1405298851367096451/1406404069412831273/Paladins_gkDfoniqKK.png?ex=68a2575b&is=68a105db&hm=337a7f741dfa480f85f4315de64180c3841c96b9192908f0b401b090e476349c&" alt="Paladin Internal" class="box-img">
+                    <div class="box-title">Paladin Internal</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">Update</span>
+                    </div>
+                    <a href="https://gofile.io/d/o7wSdy" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+                <div class="download-box fortnite-box down">
+                    <img src="https://media.discordapp.net/attachments/1293140235961761823/1405620771296116908/image.png?ex=68a220db&is=68a0cf5b&hm=775cb6a9da82791ac7109589ff621be0dce606b27c7422ae393261dd9de6f087&=&format=webp&quality=lossless" alt="CS2 Internal" class="box-img">
+                    <div class="box-title">CS2 Internal</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">DOWN</span>
+                    </div>
+                    <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7XDbfc6TyxCCuPDsUCKP0WqbrrXfqQPWTGQ&s" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+                <div class="download-box fortnite-box down">
+                    <img src="https://i.redd.it/keqvh7kc96wa1.jpg" alt="Rogue Company External" class="box-img">
+                    <div class="box-title">Rogue Company External</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">DOWN</span>
+                    </div>
+                    <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7XDbfc6TyxCCuPDsUCKP0WqbrrXfqQPWTGQ&s" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+                <div class="download-box fortnite-box down">
+                    <img src="https://media.discordapp.net/attachments/1401989249238040626/1402573155364765727/image.png?ex=68a23f4a&is=68a0edca&hm=a6dd8d7d5dd2a89f20b0efbc0754bf58f5b440ff49489fdfd0ef9f77068066a3&=&format=webp&quality=lossless&width=1254&height=894" alt="Temps Spoofer" class="box-img">
+                    <div class="box-title">Temps Spoofer</div>
+                    <div class="box-price-stock">
+                        <span class="box-price">Price: <b>Free</b></span>
+                        <span class="box-stock">DOWN</span>
+                    </div>
+                    <a href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7XDbfc6TyxCCuPDsUCKP0WqbrrXfqQPWTGQ&s" class="download-btn" target="_blank">Télécharger</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Règlement -->
+    <div class="modal" id="modal-termes">
+        <div class="modal-content">
+            <span class="close" data-close="modal-termes">&times;</span>
+            <h2>📜 Règlement du Serveur Discord 📜</h2>
+            <p>
+Bienvenue sur notre serveur ! Avant de participer, merci de lire et de respecter les règles ci-dessous afin de garantir une bonne ambiance pour tous.<br><br>
+<b>Respect :</b> Le respect mutuel est essentiel. Aucune insulte, discrimination, harcèlement ou comportement toxique ne sera toléré.<br><br>
+<b>Pas de Spam :</b> Évitez de spammer les salons, les messages privés ou les mentions. Le spam inutile perturbe la communauté.<br><br>
+<b>Contenu Inapproprié :</b> Tout contenu inapproprié (NSFW, violence, etc.) est strictement interdit. Restez dans le cadre des règles de Discord.<br><br>
+<b>Publicité :</b> Aucune publicité pour d'autres serveurs, produits ou services n'est autorisée sans l'accord préalable de l'administration.<br><br>
+<b>Utilisation des salons :</b> Chaque salon a un but précis. Merci de respecter les thématiques des canaux et d'utiliser le bon salon pour chaque discussion.<br><br>
+<b>Aide et Tickets :</b> Si tu as un problème ou une question, utilise le système de tickets (PAS DE MP AUX ADMINS OU AU FONDATEUR). Nous sommes là pour t'aider !<br><br>
+<b>Cheats et Hacks :</b> L'utilisation ou le partage d'outils non autorisés en dehors du cadre du serveur est strictement interdit. Toute violation est sous ta responsabilité.<br><br>
+<b>Respect des Modérateurs :</b> Les décisions des modérateurs doivent être respectées. En cas de désaccord, discutez-en calmement.<br><br>
+<b>Sanctions :</b> Le non-respect des règles peut entraîner un avertissement, un kick, ou un ban, selon la gravité de l'infraction.
+            </p>
+            <div class="discord-link-container">
+                <a href="https://discord.gg/vT4XcxYj9t" target="_blank" class="discord-link">Discord Link</a>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Avis -->
+    <div class="modal" id="modal-avis">
+        <div class="modal-content">
+            <span class="close" data-close="modal-avis">&times;</span>
+            <h2>Les avis des utilisateurs</h2>
+            <form id="avis-form">
+                <input type="text" id="avis-nom" placeholder="Votre pseudo" required>
+                <textarea id="avis-text" placeholder="Votre avis..." required></textarea>
+                <select id="avis-note">
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="1">⭐</option>
+                </select>
+                <button type="submit" class="modern-btn">Envoyer</button>
+            </form>
+            <div id="avis-list"></div>
+        </div>
+    </div>
+    <script src="scrypt.js"></script>
+    <div class="watermark">dev by jules</div>
+</body>
+</html>
