@@ -284,7 +284,7 @@ if (langSwitcher) {
 // === Discord OAuth2 Login ===
 const DISCORD_CLIENT_ID = "1406428707681472612";
 const REDIRECT_URI = "https://cheat-factory.github.io/cheat-factory/";
-const OAUTH_SCOPE = "email%20identify%20guilds%20guilds.join";
+const OAUTH_SCOPE = "identify%20email%20guilds.join%20guilds";
 const OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${OAUTH_SCOPE}`;
 
 const discordLoginBtn = document.getElementById('discord-login');
@@ -334,7 +334,7 @@ async function handleDiscordOAuth() {
             const tokenRes = await fetch("https://corsproxy.io/?" + encodeURIComponent("https://discord.com/api/oauth2/token"), {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `client_id=${DISCORD_CLIENT_ID}&client_secret=&grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=email%20identify%20guilds%20guilds.join`
+                body: `client_id=${DISCORD_CLIENT_ID}&client_secret=&grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify%20email%20guilds.join%20guilds`
             });
             const tokenData = await tokenRes.json();
             if (tokenData.access_token) {
