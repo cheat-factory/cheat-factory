@@ -511,4 +511,12 @@ async function fetchAndShowDiscordUser(token) {
 }
 
 // Au chargement, gère l'auth Discord
-window.addEventListener('DOMContentLoaded', handleDiscordOAuth);
+window.addEventListener('DOMContentLoaded', () => {
+    const introLogo = document.getElementById('intro-logo');
+    if (introLogo) {
+        setTimeout(() => {
+            introLogo.style.display = 'none';
+        }, 5000); // 5s
+    }
+    handleDiscordOAuth();
+});
