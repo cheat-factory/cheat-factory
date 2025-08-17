@@ -629,7 +629,7 @@ document.querySelectorAll('#cheat-list .download-btn').forEach(btn => {
     });
 });
 
-// Burger menu logic
+
 const burgerMenu = document.getElementById('burger-menu');
 const burgerIcon = burgerMenu.querySelector('.burger-icon');
 const burgerPanel = burgerMenu.querySelector('.burger-panel');
@@ -688,7 +688,7 @@ langSwitcher.onchange = function() {
     setLang(this.value);
 };
 
-// Met à jour le burger à chaque changement d'utilisateur
+
 function showDiscordUser(user) {
     discordLoginBtn.style.display = 'none';
     discordUserContainer.style.display = 'flex';
@@ -701,7 +701,7 @@ function showDiscordUser(user) {
     updateBurgerUser();
 }
 function showDiscordLogin() {
-    // N'affiche le bouton de connexion que si aucun user n'est stocké
+  
     const userStr = localStorage.getItem('discord_user');
     if (userStr) {
         try {
@@ -709,7 +709,7 @@ function showDiscordLogin() {
             showDiscordUser(user);
             return;
         } catch {
-            // Si parsing échoue, on affiche le bouton
+            
         }
     }
     discordLoginBtn.style.display = '';
@@ -725,3 +725,6 @@ function logoutDiscord() {
 
     updateBurgerUser();
 }
+
+
+discordLoginBtn.style.display = '';
