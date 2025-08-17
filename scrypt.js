@@ -294,10 +294,22 @@ const discordAvatar = document.getElementById('discord-avatar');
 const discordUsername = document.getElementById('discord-username');
 
 function showDiscordLogin() {
+    // N'affiche le bouton de connexion que si aucun user n'est stocké
+    const userStr = localStorage.getItem('discord_user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            showDiscordUser(user);
+            return;
+        } catch {
+            // Si parsing échoue, on affiche le bouton
+        }
+    }
     discordLoginBtn.style.display = '';
     discordUserContainer.style.display = 'none';
     discordLogoutBtn.style.display = 'none';
 }
+
 function showDiscordUser(user) {
     discordLoginBtn.style.display = 'none';
     discordUserContainer.style.display = 'flex';
@@ -307,6 +319,7 @@ function showDiscordUser(user) {
     discordUsername.textContent = user.username + (user.discriminator ? '#' + user.discriminator : '');
     discordLogoutBtn.style.display = '';
 }
+
 function hideDiscordUser() {
     discordUserContainer.style.display = 'none';
     discordLoginBtn.style.display = '';
@@ -329,47 +342,40 @@ async function handleDiscordOAuth() {
     const code = params.get('code');
     if (code) {
         try {
-            // Utilisation d'un proxy CORS pour POST vers Discord (car CORS interdit côté client)
-            // Remplacer par votre propre backend/proxy pour production
             const tokenRes = await fetch("https://corsproxy.io/?" + encodeURIComponent("https://discord.com/api/oauth2/token"), {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: `client_id=${DISCORD_CLIENT_ID}&client_secret=&grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify%20email%20guilds.join%20guilds`
             });
             const tokenData = await tokenRes.json();
-            // Ajout debug
-            console.log("Discord tokenData:", tokenData);
             if (tokenData.access_token) {
                 localStorage.setItem('discord_token', tokenData.access_token);
-                // Nettoie l'URL
                 window.history.replaceState({}, document.title, window.location.pathname);
                 await fetchAndShowDiscordUser(tokenData.access_token);
             } else {
                 showDiscordLogin();
-                alert("Erreur Discord: Impossible de récupérer le token.");
             }
         } catch (e) {
             showDiscordLogin();
-            alert("Erreur Discord: " + e.message);
         }
     } else {
-        // Si token déjà stocké, tente de récupérer l'utilisateur
+        // Si user déjà stocké, affiche-le immédiatement (évite le flash du bouton login)
+        const userStr = localStorage.getItem('discord_user');
+        if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                showDiscordUser(user);
+                return;
+            } catch {
+                // Si parsing échoue, on tente avec le token
+            }
+        }
+        // Sinon, si token déjà stocké, tente de récupérer l'utilisateur
         const token = localStorage.getItem('discord_token');
         if (token) {
             await fetchAndShowDiscordUser(token);
         } else {
-            // Fallback: si user déjà stocké, affiche-le (ex: refresh)
-            const userStr = localStorage.getItem('discord_user');
-            if (userStr) {
-                try {
-                    const user = JSON.parse(userStr);
-                    showDiscordUser(user);
-                } catch {
-                    showDiscordLogin();
-                }
-            } else {
-                showDiscordLogin();
-            }
+            showDiscordLogin();
         }
     }
 }
@@ -385,7 +391,6 @@ async function fetchAndShowDiscordUser(token) {
         showDiscordUser(user);
     } catch (e) {
         logoutDiscord();
-        alert("Erreur Discord: " + e.message);
     }
 }
 
