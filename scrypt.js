@@ -468,18 +468,10 @@ const discordUserContainer = document.getElementById('discord-user-container');
 const discordAvatar = document.getElementById('discord-avatar');
 const discordUsername = document.getElementById('discord-username');
 
+// Affiche le bouton connexion par défaut au chargement
+discordLoginBtn.style.display = '';
+
 function showDiscordLogin() {
-    // N'affiche le bouton de connexion que si aucun user n'est stocké
-    const userStr = localStorage.getItem('discord_user');
-    if (userStr) {
-        try {
-            const user = JSON.parse(userStr);
-            showDiscordUser(user);
-            return;
-        } catch {
-            // Si parsing échoue, on affiche le bouton
-        }
-    }
     discordLoginBtn.style.display = '';
     discordUserContainer.style.display = 'none';
     discordLogoutBtn.style.display = 'none';
@@ -493,19 +485,18 @@ function showDiscordUser(user) {
         : 'https://cdn.discordapp.com/embed/avatars/0.png';
     discordUsername.textContent = user.username + (user.discriminator ? '#' + user.discriminator : '');
     discordLogoutBtn.style.display = '';
-}
 
-function hideDiscordUser() {
-    discordUserContainer.style.display = 'none';
-    discordLoginBtn.style.display = '';
-    discordLogoutBtn.style.display = 'none';
+    updateBurgerUser();
 }
 
 function logoutDiscord() {
     localStorage.removeItem('discord_token');
     localStorage.removeItem('discord_user');
     showDiscordLogin();
+
+    updateBurgerUser();
 }
+
 
 discordLoginBtn.onclick = () => {
     window.location.href = OAUTH_URL;
@@ -678,6 +669,15 @@ burgerLogout.onclick = () => {
 };
 
 burgerLangSwitcher.value = langSwitcher.value;
+burgerLangSwitcher.onchange = function() {
+    langSwitcher.value = this.value;
+    setLang(this.value);
+};
+
+langSwitcher.onchange = function() {
+    burgerLangSwitcher.value = this.value;
+    setLang(this.value);
+};
 burgerLangSwitcher.onchange = function() {
     langSwitcher.value = this.value;
     setLang(this.value);
