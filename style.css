@@ -4,7 +4,7 @@ body {
     min-height: 100vh;
     background: #18181b;
     overflow: hidden;
-    cursor: none; /* Désactive le curseur natif */
+    cursor: auto; /* Remet le curseur natif */
 }
 
 #stars-bg {
@@ -39,12 +39,18 @@ body {
     background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    animation: glowPulse 2s infinite alternate;
+    animation: glowPulse 2s infinite alternate, titlePopIn 1.2s cubic-bezier(.7,1.7,.6,1);
 }
 
 @keyframes glowPulse {
     0% { text-shadow: 0 0 40px #a855f7, 0 0 80px #ec4899; }
     100% { text-shadow: 0 0 80px #ec4899, 0 0 120px #a855f7; }
+}
+@keyframes titlePopIn {
+    0% { opacity: 0; transform: scale(0.7) translateY(-30px);}
+    60% { opacity: 1; transform: scale(1.08) translateY(8px);}
+    80% { opacity: 1; transform: scale(0.98) translateY(0);}
+    100% { opacity: 1; transform: scale(1) translateY(0);}
 }
 
 .btn-group {
@@ -65,11 +71,32 @@ body {
     box-shadow: 0 2px 12px rgba(168,85,247,0.12);
     cursor: pointer;
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
 }
-.modern-btn:hover {
+.modern-btn::after {
+    content: "";
+    position: absolute;
+    left: -50%;
+    top: 0;
+    width: 200%;
+    height: 100%;
     background: linear-gradient(90deg, #a855f7 0%, #ec4899 100%);
-    color: #fff;
-    box-shadow: 0 4px 24px rgba(236,72,153,0.18);
+    opacity: 0.15;
+    transform: skewX(-24deg);
+    transition: left 0.4s cubic-bezier(.7,1.7,.6,1);
+    z-index: 0;
+}
+.modern-btn:hover::after {
+    left: 0;
+}
+.modern-btn:active {
+    animation: btnBounce 0.18s;
+}
+@keyframes btnBounce {
+    0% { transform: scale(1);}
+    50% { transform: scale(1.08);}
+    100% { transform: scale(1);}
 }
 
 .modal {
@@ -96,7 +123,13 @@ body {
     color: #fff;
     box-shadow: 0 8px 32px rgba(168,85,247,0.18);
     position: relative;
-    animation: fadeInUp 0.5s;
+    animation: fadeInUp 0.6s cubic-bezier(.7,1.7,.6,1);
+}
+@keyframes fadeInUp {
+    0% { opacity: 0; transform: translateY(40px) scale(0.95);}
+    60% { opacity: 1; transform: translateY(-8px) scale(1.03);}
+    80% { opacity: 1; transform: translateY(0) scale(0.98);}
+    100% { opacity: 1; transform: translateY(0) scale(1);}
 }
 
 .close {
@@ -107,6 +140,11 @@ body {
     color: #a855f7;
     cursor: pointer;
     font-weight: bold;
+    transition: transform 0.2s, color 0.2s;
+}
+.close:hover {
+    color: #ec4899;
+    transform: scale(1.2) rotate(-12deg);
 }
 
 #avis-form {
@@ -214,15 +252,21 @@ body {
     flex-direction: column;
     align-items: center;
     width: 220px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: transform 0.25s cubic-bezier(.7,1.7,.6,1), box-shadow 0.25s;
     position: relative;
     border: 2px solid #27272a;
 }
-
 .download-box:hover {
     transform: translateY(-8px) scale(1.04);
     box-shadow: 0 8px 32px rgba(236,72,153,0.18);
     border-color: #a855f7;
+    animation: boxPulse 0.7s cubic-bezier(.7,1.7,.6,1);
+}
+@keyframes boxPulse {
+    0% { transform: scale(1);}
+    30% { transform: scale(1.04);}
+    60% { transform: scale(0.98);}
+    100% { transform: scale(1);}
 }
 
 .box-img {
@@ -419,26 +463,7 @@ body {
 }
 
 #mouse-cursor {
-    position: fixed;
-    top: 0; left: 0;
-    width: 10px;
-    height: 10px;
-    pointer-events: none;
-    border-radius: 50%;
-    background: #ff1f8f; /* rose pétant */
-    box-shadow: 0 0 0 0 #ff1f8f;
-    transform: translate(-50%, -50%);
-    z-index: 9999;
-    opacity: 1;
-    will-change: transform;
-    animation: none;
-}
-    animation: cursorPulse 1.2s infinite alternate;
-}
-
-@keyframes cursorPulse {
-    0% { box-shadow: 0 0 8px 2px #a855f7, 0 0 16px 4px #ec4899; }
-    100% { box-shadow: 0 0 12px 4px #ec4899, 0 0 24px 8px #a855f7; }
+    display: none !important;
 }
 
 .watermark {
@@ -604,8 +629,9 @@ body {
     min-width: 260px;
     max-width: 90vw;
     text-align: center;
-    animation: fadeInUp 0.5s;
+    animation: fadeInUp 0.6s cubic-bezier(.7,1.7,.6,1);
 }
+
 #connect-popup .close {
     position: absolute;
     top: 18px;
@@ -614,9 +640,37 @@ body {
     color: #a855f7;
     cursor: pointer;
     font-weight: bold;
+    transition: transform 0.2s, color 0.2s;
 }
+#connect-popup .close:hover {
+    color: #ec4899;
+    transform: scale(1.2) rotate(-12deg);
+}
+
 #connect-popup-btn {
     margin-top: 1.5em;
     width: 100%;
     font-size: 1.08em;
+}
+
+#logo-top-left {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    transition: transform 0.18s cubic-bezier(.7,1.7,.6,1);
+}
+#logo-top-left img {
+    width: 96px;
+    height: 96px;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+    transition: transform 0.2s;
+}
+#logo-top-left:hover img {
+    transform: scale(1.12) rotate(-8deg);
+}
 }
