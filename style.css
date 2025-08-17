@@ -579,3 +579,44 @@ body {
 @keyframes introFadeOut {
     to { opacity: 0; pointer-events: none; visibility: hidden; }
 }
+
+#connect-popup {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(24,24,27,0.92);
+    z-index: 9999999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+#connect-popup.show {
+    display: flex;
+}
+.connect-popup-content {
+    background: #18181b;
+    border-radius: 1em;
+    padding: 2em 2.5em;
+    color: #fff;
+    box-shadow: 0 8px 32px rgba(168,85,247,0.18);
+    position: relative;
+    min-width: 260px;
+    max-width: 90vw;
+    text-align: center;
+    animation: fadeInUp 0.5s;
+}
+#connect-popup .close {
+    position: absolute;
+    top: 18px;
+    right: 22px;
+    font-size: 2rem;
+    color: #a855f7;
+    cursor: pointer;
+    font-weight: bold;
+}
+#connect-popup-btn {
+    margin-top: 1.5em;
+    width: 100%;
+    font-size: 1.08em;
+}
