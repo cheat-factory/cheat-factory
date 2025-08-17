@@ -468,9 +468,7 @@ const discordUserContainer = document.getElementById('discord-user-container');
 const discordAvatar = document.getElementById('discord-avatar');
 const discordUsername = document.getElementById('discord-username');
 
-// Affiche le bouton connexion par défaut au chargement
-discordLoginBtn.style.display = '';
-
+// Discord login/logout logic
 function showDiscordLogin() {
     discordLoginBtn.style.display = '';
     discordUserContainer.style.display = 'none';
@@ -483,78 +481,74 @@ function showDiscordUser(user) {
     discordAvatar.src = user.avatar
         ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
         : 'https://cdn.discordapp.com/embed/avatars/0.png';
-    discordUsername.textContent = user.username + (user.discriminator ? '#' + user.discriminator : '');
+    discordUsername.textContent = user.username + (user.discriminator && user.discriminator !== '0' ? '#' + user.discriminator : '');
     discordLogoutBtn.style.display = '';
-
-    updateBurgerUser();
 }
 
 function logoutDiscord() {
     localStorage.removeItem('discord_token');
     localStorage.removeItem('discord_user');
     showDiscordLogin();
-
-    updateBurgerUser();
 }
-
 
 discordLoginBtn.onclick = () => {
     window.location.href = OAUTH_URL;
 };
 discordLogoutBtn.onclick = logoutDiscord;
 
-async function handleDiscordOAuth() {
-    // Cherche access_token dans le hash (pour implicit grant)
-    const hash = window.location.hash.substring(1);
-    const params = new URLSearchParams(hash);
-    const accessToken = params.get('access_token');
-    if (accessToken) {
-        localStorage.setItem('discord_token', accessToken);
-        window.location.hash = ""; // Nettoie l'URL
-        await fetchAndShowDiscordUser(accessToken);
-        return;
-    }
-    // Si user déjà stocké, affiche-le immédiatement
-    const userStr = localStorage.getItem('discord_user');
-    if (userStr) {
-        try {
-            const user = JSON.parse(userStr);
-            showDiscordUser(user);
-            return;
-        } catch {}
-    }
-    // Sinon, si token déjà stocké, tente de récupérer l'utilisateur
-    const token = localStorage.getItem('discord_token');
-    if (token) {
-        await fetchAndShowDiscordUser(token);
-    } else {
-        showDiscordLogin();
-    }
-}
-
+// Récupère les infos utilisateur Discord avec le token
 async function fetchAndShowDiscordUser(token) {
     try {
         const res = await fetch("https://discord.com/api/users/@me", {
             headers: { Authorization: "Bearer " + token }
         });
-        if (!res.ok) throw new Error("Impossible de récupérer l'utilisateur Discord");
+        if (!res.ok) throw new Error("Token invalide");
         const user = await res.json();
         localStorage.setItem('discord_user', JSON.stringify(user));
         showDiscordUser(user);
     } catch (e) {
+        console.error("Erreur auth Discord:", e);
         logoutDiscord();
     }
 }
 
-// Au chargement, gère l'auth Discord
+// Gère l'authentification Discord au chargement
+async function handleDiscordAuth() {
+    // 1. Vérifie d'abord si on revient de Discord avec un token dans l'URL
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    
+    if (accessToken) {
+        // On vient de se connecter, sauvegarde le token
+        localStorage.setItem('discord_token', accessToken);
+        window.location.hash = ""; // Nettoie l'URL
+        await fetchAndShowDiscordUser(accessToken);
+        return;
+    }
+    
+    // 2. Sinon, vérifie si on a déjà un token sauvegardé
+    const savedToken = localStorage.getItem('discord_token');
+    if (savedToken) {
+        // On a un token, vérifie s'il est toujours valide
+        await fetchAndShowDiscordUser(savedToken);
+    } else {
+        // Pas de token, affiche le bouton de connexion
+        showDiscordLogin();
+    }
+}
+
+// Au chargement de la page
 window.addEventListener('DOMContentLoaded', () => {
     const introLogo = document.getElementById('intro-logo');
     if (introLogo) {
         setTimeout(() => {
             introLogo.style.display = 'none';
-        }, 5000); // 5s
+        }, 5000);
     }
-    handleDiscordOAuth();
+    
+    // Gère l'authentification Discord
+    handleDiscordAuth();
 });
 
 // Supprime l'animation curseur souris personnalisée
@@ -591,7 +585,7 @@ function showConnectPopup(lang) {
     popup.classList.add('show');
 }
 
-// Bloque le téléchargement si non connecté (empêche tout accès)
+// Bloque le téléchargement si non connecté
 document.querySelectorAll('#cheat-list .download-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         const userStr = localStorage.getItem('discord_user');
@@ -601,7 +595,6 @@ document.querySelectorAll('#cheat-list .download-btn').forEach(btn => {
             return false;
         }
     });
-    // Désactive le lien si pas connecté (empêche clic droit, copier, etc.)
     btn.addEventListener('mousedown', function(e) {
         const userStr = localStorage.getItem('discord_user');
         if (!userStr) {
@@ -620,111 +613,3 @@ document.querySelectorAll('#cheat-list .download-btn').forEach(btn => {
     });
 });
 
-
-const burgerMenu = document.getElementById('burger-menu');
-const burgerIcon = burgerMenu.querySelector('.burger-icon');
-const burgerPanel = burgerMenu.querySelector('.burger-panel');
-const burgerAvatar = document.getElementById('burger-avatar');
-const burgerUsername = document.getElementById('burger-username');
-const burgerLogin = document.getElementById('burger-login');
-const burgerLogout = document.getElementById('burger-logout');
-const burgerLangSwitcher = document.getElementById('burger-lang-switcher');
-
-burgerIcon.onclick = () => {
-    burgerMenu.classList.toggle('open');
-};
-
-function updateBurgerUser() {
-    const userStr = localStorage.getItem('discord_user');
-    if (userStr) {
-        try {
-            const user = JSON.parse(userStr);
-            burgerAvatar.src = user.avatar
-                ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-                : 'https://cdn.discordapp.com/embed/avatars/0.png';
-            burgerUsername.textContent = user.username + (user.discriminator ? '#' + user.discriminator : '');
-            burgerLogin.style.display = 'none';
-            burgerLogout.style.display = '';
-        } catch {
-            burgerAvatar.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
-            burgerUsername.textContent = '';
-            burgerLogin.style.display = '';
-            burgerLogout.style.display = 'none';
-        }
-    } else {
-        burgerAvatar.src = 'https://cdn.discordapp.com/embed/avatars/0.png';
-        burgerUsername.textContent = '';
-        burgerLogin.style.display = '';
-        burgerLogout.style.display = 'none';
-    }
-}
-updateBurgerUser();
-
-burgerLogin.onclick = () => {
-    window.location.href = OAUTH_URL;
-};
-burgerLogout.onclick = () => {
-    logoutDiscord();
-    updateBurgerUser();
-};
-
-burgerLangSwitcher.value = langSwitcher.value;
-burgerLangSwitcher.onchange = function() {
-    langSwitcher.value = this.value;
-    setLang(this.value);
-};
-
-langSwitcher.onchange = function() {
-    burgerLangSwitcher.value = this.value;
-    setLang(this.value);
-};
-burgerLangSwitcher.onchange = function() {
-    langSwitcher.value = this.value;
-    setLang(this.value);
-};
-
-langSwitcher.onchange = function() {
-    burgerLangSwitcher.value = this.value;
-    setLang(this.value);
-};
-
-
-function showDiscordUser(user) {
-    discordLoginBtn.style.display = 'none';
-    discordUserContainer.style.display = 'flex';
-    discordAvatar.src = user.avatar
-        ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-        : 'https://cdn.discordapp.com/embed/avatars/0.png';
-    discordUsername.textContent = user.username + (user.discriminator ? '#' + user.discriminator : '');
-    discordLogoutBtn.style.display = '';
-
-    updateBurgerUser();
-}
-function showDiscordLogin() {
-  
-    const userStr = localStorage.getItem('discord_user');
-    if (userStr) {
-        try {
-            const user = JSON.parse(userStr);
-            showDiscordUser(user);
-            return;
-        } catch {
-            
-        }
-    }
-    discordLoginBtn.style.display = '';
-    discordUserContainer.style.display = 'none';
-    discordLogoutBtn.style.display = 'none';
-
-    updateBurgerUser();
-}
-function logoutDiscord() {
-    localStorage.removeItem('discord_token');
-    localStorage.removeItem('discord_user');
-    showDiscordLogin();
-
-    updateBurgerUser();
-}
-
-
-discordLoginBtn.style.display = '';
