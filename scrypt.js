@@ -285,7 +285,7 @@ if (langSwitcher) {
 const DISCORD_CLIENT_ID = "1406428707681472612";
 const REDIRECT_URI = "https://cheat-factory.github.io/cheat-factory/";
 const OAUTH_SCOPE = "identify%20email%20guilds.join%20guilds";
-const OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${OAUTH_SCOPE}`;
+const OAUTH_URL = `https://discord.com/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&response_type=token&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=${OAUTH_SCOPE}`;
 
 const discordLoginBtn = document.getElementById('discord-login');
 const discordLogoutBtn = document.getElementById('discord-logout');
@@ -338,45 +338,31 @@ discordLoginBtn.onclick = () => {
 discordLogoutBtn.onclick = logoutDiscord;
 
 async function handleDiscordOAuth() {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
-    if (code) {
+    // Cherche access_token dans le hash (pour implicit grant)
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    const accessToken = params.get('access_token');
+    if (accessToken) {
+        localStorage.setItem('discord_token', accessToken);
+        window.location.hash = ""; // Nettoie l'URL
+        await fetchAndShowDiscordUser(accessToken);
+        return;
+    }
+    // Si user déjà stocké, affiche-le immédiatement
+    const userStr = localStorage.getItem('discord_user');
+    if (userStr) {
         try {
-            const tokenRes = await fetch("https://corsproxy.io/?" + encodeURIComponent("https://discord.com/api/oauth2/token"), {
-                method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: `client_id=${DISCORD_CLIENT_ID}&client_secret=&grant_type=authorization_code&code=${code}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify%20email%20guilds.join%20guilds`
-            });
-            const tokenData = await tokenRes.json();
-            if (tokenData.access_token) {
-                localStorage.setItem('discord_token', tokenData.access_token);
-                window.history.replaceState({}, document.title, window.location.pathname);
-                await fetchAndShowDiscordUser(tokenData.access_token);
-            } else {
-                showDiscordLogin();
-            }
-        } catch (e) {
-            showDiscordLogin();
-        }
+            const user = JSON.parse(userStr);
+            showDiscordUser(user);
+            return;
+        } catch {}
+    }
+    // Sinon, si token déjà stocké, tente de récupérer l'utilisateur
+    const token = localStorage.getItem('discord_token');
+    if (token) {
+        await fetchAndShowDiscordUser(token);
     } else {
-        // Si user déjà stocké, affiche-le immédiatement (évite le flash du bouton login)
-        const userStr = localStorage.getItem('discord_user');
-        if (userStr) {
-            try {
-                const user = JSON.parse(userStr);
-                showDiscordUser(user);
-                return;
-            } catch {
-                // Si parsing échoue, on tente avec le token
-            }
-        }
-        // Sinon, si token déjà stocké, tente de récupérer l'utilisateur
-        const token = localStorage.getItem('discord_token');
-        if (token) {
-            await fetchAndShowDiscordUser(token);
-        } else {
-            showDiscordLogin();
-        }
+        showDiscordLogin();
     }
 }
 
