@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheat Factory - Premium Gaming Tools</title>
+    <link rel="stylesheet" href="style-modern.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loader animé -->
+    <div id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <img src="images/logo.png" alt="Logo">
+            </div>
+            <div class="loader-bar">
+                <div class="loader-progress"></div>
+            </div>
+            <div class="loader-text">Chargement...</div>
+        </div>
+    </div>
+
+    <!-- Particules animées en arrière-plan -->
+    <canvas id="particles"></canvas>
+    <!-- Arrière-plan animé responsive (change selon le thème) -->
+    <div id="bg-animated"></div>
+    
+    <!-- Header moderne avec glassmorphism -->
+    <header class="header-glass">
+        <nav class="navbar">
+            <div class="nav-logo">
+                <img src="images/logo.png" alt="Cheat Factory">
+                <span class="logo-text">Cheat Factory</span>
+            </div>
+            
+            <ul class="nav-menu">
+                <li><a href="#home" class="nav-link active">Accueil</a></li>
+                <li><a href="#cheats" class="nav-link">Cheats</a></li>
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#reviews" class="nav-link">Avis</a></li>
+                <li><a href="https://discord.gg/vT4XcxYj9t" class="nav-link" target="_blank" rel="noopener">Contact</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <button class="theme-toggle" id="theme-toggle">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="discord-auth-btn" id="discord-auth">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                    <span>Connexion</span>
+                </button>
+                <div class="user-profile" id="user-profile" style="display:none;">
+                    <img src="" alt="Avatar" class="user-avatar" id="user-avatar">
+                    <span class="user-name" id="user-name"></span>
+                    <button class="logout-btn" id="logout-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section avec effet parallax -->
+    <section id="home" class="hero-section">
+        <div class="hero-bg">
+            <div class="hero-gradient"></div>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">🎮 Premium Gaming Tools</div>
+            <h1 class="hero-title">
+                <span class="gradient-text">Cheat Factory</span>
+            </h1>
+            <p class="hero-subtitle">
+                Découvrez notre collection exclusive de cheats premium, 
+                testés et approuvés par notre communauté
+            </p>
+            <div class="hero-stats">
+                <div class="stat-card">
+                    <div class="stat-number" data-count="1500">0</div>
+                    <div class="stat-label">Utilisateurs actifs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-count="8">0</div>
+                    <div class="stat-label">Cheats disponibles</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" data-count="99">0</div>
+                    <div class="stat-label">% Satisfaction</div>
+                </div>
+            </div>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="scrollToSection('cheats')">
+                    <span>Explorer les cheats</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+                <a href="https://discord.gg/vT4XcxYj9t" class="btn-secondary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                    </svg>
+                    <span>Rejoindre Discord</span>
+                </a>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>Défiler pour explorer</span>
+        </div>
+    </section>
+
+    <!-- Section Cheats avec filtres -->
+    <section id="cheats" class="cheats-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="gradient-text">Nos Cheats Premium</span>
+                </h2>
+                <p class="section-subtitle">Sélectionnez votre jeu et dominez la partie</p>
+            </div>
+
+            <!-- Barre de recherche et filtres -->
+            <div class="filters-container">
+                <div class="search-box">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="search-cheats" placeholder="Rechercher un cheat...">
+                </div>
+                <div class="filter-chips">
+                    <button class="chip active" data-filter="all">Tous</button>
+                    <button class="chip" data-filter="active">Actifs</button>
+                    <button class="chip" data-filter="down">Hors ligne</button>
+                    <button class="chip" data-filter="new">Nouveaux</button>
+                </div>
+            </div>
+
+            <!-- Grille de cheats -->
+            <div class="cheats-grid" id="cheats-grid">
+                <!-- Les cartes seront générées dynamiquement -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Features -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="gradient-text">Pourquoi nous choisir ?</span>
+                </h2>
+                <p class="section-subtitle">Des avantages exclusifs pour notre communauté</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h3>Mises à jour régulières</h3>
+                    <p>Nos cheats sont constamment mis à jour pour rester indétectables</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                    </div>
+                    <h3>Sécurité maximale</h3>
+                    <p>Protection anti-ban et système de sécurité avancé</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <h3>100% Gratuit</h3>
+                    <p>Tous nos cheats sont entièrement gratuits et accessibles</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 7a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <h3>Communauté active</h3>
+                    <p>Support 24/7 sur Discord avec plus de 1500 membres</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section Reviews -->
+    <section id="reviews" class="reviews-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="gradient-text">Avis de la communauté</span>
+                </h2>
+                <p class="section-subtitle">Ce que nos utilisateurs pensent de nous</p>
+            </div>
+
+            <div class="reviews-slider" id="reviews-slider">
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">JD</div>
+                        <div class="review-info">
+                            <h4>JohnDoe42</h4>
+                            <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "Les meilleurs cheats que j'ai trouvés ! Toujours à jour et le support est incroyable."
+                    </p>
+                    <div class="review-date">Il y a 2 jours</div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">SK</div>
+                        <div class="review-info">
+                            <h4>ShadowKiller</h4>
+                            <div class="review-stars">⭐⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "Facile à utiliser et très efficace. La communauté Discord est super active !"
+                    </p>
+                    <div class="review-date">Il y a 5 jours</div>
+                </div>
+
+                <div class="review-card">
+                    <div class="review-header">
+                        <div class="review-avatar">NX</div>
+                        <div class="review-info">
+                            <h4>NinjaX</h4>
+                            <div class="review-stars">⭐⭐⭐⭐</div>
+                        </div>
+                    </div>
+                    <p class="review-text">
+                        "Très bon site, les cheats fonctionnent parfaitement. Je recommande !"
+                    </p>
+                    <div class="review-date">Il y a 1 semaine</div>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="add-review-btn">
+                <span>Laisser un avis</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/logo.png" alt="Logo" class="footer-logo">
+                    <h3>Cheat Factory</h3>
+                    <p>Premium gaming tools depuis 2024</p>
+                </div>
+                <div class="footer-links">
+                    <h4>Liens rapides</h4>
+                    <ul>
+                        <li><a href="#home">Accueil</a></li>
+                        <li><a href="#cheats">Cheats</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#reviews">Avis</a></li>
+                    </ul>
+                </div>
+                <div class="footer-social">
+                    <h4>Nous suivre</h4>
+                    <div class="social-links">
+                        <a href="https://discord.gg/vT4XcxYj9t" class="social-link">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Cheat Factory. Développé avec ❤️ par Jules</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div class="modal" id="review-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="close-review-modal">&times;</button>
+            <h3>Laisser un avis</h3>
+            <form id="review-form">
+                <input type="text" placeholder="Votre pseudo" required>
+                <div class="star-rating">
+                    <span class="star" data-rating="1">⭐</span>
+                    <span class="star" data-rating="2">⭐</span>
+                    <span class="star" data-rating="3">⭐</span>
+                    <span class="star" data-rating="4">⭐</span>
+                    <span class="star" data-rating="5">⭐</span>
+                </div>
+                <textarea placeholder="Votre avis..." required></textarea>
+                <button type="submit" class="btn-primary">Envoyer</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script-modern.js"></script>
+</body>
+</html>
