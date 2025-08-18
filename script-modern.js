@@ -1,4 +1,3 @@
-// Utilise l'URL OAuth2 fournie (flow code, scopes étendus)
 const OAUTH_URL = "https://discord.com/oauth2/authorize?client_id=1406679259573125290&response_type=code&redirect_uri=https%3A%2F%2Fcheat-factory.github.io%2Fcheat-factory%2F&scope=identify+email+guilds.join+guilds+connections+guilds.members.read";
 
 const cheatsData = [
@@ -98,29 +97,20 @@ document.addEventListener('DOMContentLoaded', () => {
     initAnimations();
     initTheme();
 
-    // Récupère le nombre réel de membres Discord et met à jour la stat
     fetchDiscordMemberCount();
 });
-// Récupère le nombre de membres du serveur Discord et met à jour la stat
 function fetchDiscordMemberCount() {
-    // Utilise l'API widget Discord (pas besoin de token, mais doit être activé côté serveur)
     const serverId = '1287504865563639829';
     const url = `https://discord.com/api/guilds/${serverId}/widget.json`;
     fetch(url)
         .then(res => res.json())
         .then(data => {
             if (data && typeof data.members === 'object' && typeof data.presence_count === 'number') {
-                // Si le widget est activé, data.members.length = connectés, data.presence_count = connectés, data.instant_invite existe
-                // Mais on veut le nombre total de membres, qui n'est pas fourni par le widget. On prend le nombre de connectés si pas mieux.
-                // On tente d'utiliser data.members.length comme fallback.
-                // Pour le vrai total, il faudrait un bot ou une API privée.
-                // On affiche le nombre de connectés si pas mieux.
                 const statElem = document.querySelector('.stat-number[data-count]');
                 if (statElem) {
                     statElem.textContent = data.members.length;
                 }
             } else if (data && typeof data.instant_invite === 'string') {
-                // Widget activé mais pas d'info membres
                 const statElem = document.querySelector('.stat-number[data-count]');
                 if (statElem) {
                     statElem.textContent = '?';
@@ -128,7 +118,6 @@ function fetchDiscordMemberCount() {
             }
         })
         .catch(() => {
-            // Erreur réseau ou widget désactivé
             const statElem = document.querySelector('.stat-number[data-count]');
             if (statElem) {
                 statElem.textContent = '?';
@@ -190,7 +179,7 @@ function initParticles() {
             } else {
                 const count = 60;
                 for (let i = 0; i < count; i++) {
-                    const speedY = -0.2 - Math.random() * 0.4; // monte doucement
+                    const speedY = -0.2 - Math.random() * 0.4;
                     this.particles.push({
                         x: Math.random() * this.canvas.width,
                         y: Math.random() * this.canvas.height,
@@ -501,13 +490,9 @@ function initReviews() {
     const stars = document.querySelectorAll('.star');
     const webhookUrl = "https://discord.com/api/webhooks/1406420197707087973/dzE0YA2IVj0w6rdRTLh4bf0NY1Lu6vTp3o-Hg2wTNSaqxHvykj0bco33smiUnVk7_M2o";
 
-    // Afficher dynamiquement les derniers avis du Discord (si possible)
     loadDiscordReviews();
-// Tente de charger les derniers avis du salon Discord (nécessite widget activé et salon public)
 function loadDiscordReviews() {
     const reviewsContainer = document.getElementById('reviews-slider');
-    // Pour une vraie intégration, il faudrait un bot ou un endpoint custom qui lit les messages du salon d'avis.
-    // L'API widget Discord ne donne pas accès aux messages, donc on affiche un message d'info.
     if (reviewsContainer) {
         const info = document.createElement('div');
         info.style.textAlign = 'center';
@@ -561,7 +546,6 @@ function loadDiscordReviews() {
             : 'https://cdn.discordapp.com/embed/avatars/0.png';
         const starsStr = '⭐'.repeat(selectedRating) + '☆'.repeat(5 - selectedRating);
 
-        // Préparer l'embed Discord
         const embed = {
             author: {
                 name: pseudo,
@@ -579,7 +563,6 @@ function loadDiscordReviews() {
             timestamp: new Date().toISOString()
         };
 
-        // Envoyer au webhook
         try {
             await fetch(webhookUrl, {
                 method: 'POST',
