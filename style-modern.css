@@ -11,7 +11,6 @@
     --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
 }
 
-/* Variables pour le thème clair */
 body.light-theme {
     --dark: #ffffff;
     --dark-light: #f3f4f6;
@@ -24,7 +23,6 @@ body.light-theme {
     --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Variables pour le thème sombre (par défaut) */
 body {
     --card-bg: rgba(26, 26, 26, 0.5);
     --border-color: rgba(139, 92, 246, 0.1);
@@ -48,7 +46,6 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Loader */
 #loader {
     position: fixed;
     top: 0;
@@ -105,24 +102,21 @@ body {
     50% { transform: scale(1.1); }
 }
 
-/* Particules canvas */
 #particles {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1; /* entre le fond animé et le contenu */
-    pointer-events: none; /* ne bloque pas les clics */
+    z-index: 1;
+    pointer-events: none;
 }
 
-/* Couche d'arrière-plan animée (derrière le contenu) */
 #bg-animated {
     position: fixed;
     inset: 0;
-    z-index: 0; /* au-dessus du fond du body, sous les particules */
+    z-index: 0;
     pointer-events: none;
-    /* Dégradé animé par défaut (thème sombre) */
     background: radial-gradient(600px 600px at 20% 20%, rgba(139, 92, 246, 0.20), transparent 60%),
                 radial-gradient(500px 500px at 80% 30%, rgba(236, 72, 153, 0.16), transparent 60%),
                 radial-gradient(700px 700px at 50% 80%, rgba(59, 130, 246, 0.12), transparent 70%),
@@ -137,7 +131,6 @@ body {
     100% { filter: hue-rotate(16deg) saturate(1); }
 }
 
-/* Variante claire: dégradés plus doux, teintes plus claires */
 body.light-theme #bg-animated {
     background: radial-gradient(800px 800px at 15% 25%, rgba(139, 92, 246, 0.18), transparent 60%),
                 radial-gradient(700px 700px at 85% 35%, rgba(236, 72, 153, 0.12), transparent 60%),
@@ -153,7 +146,6 @@ body.light-theme #bg-animated {
     100% { filter: hue-rotate(0deg) saturate(1.05) brightness(1.02); }
 }
 
-/* Header avec glassmorphism */
 .header-glass {
     position: fixed;
     top: 0;
@@ -163,7 +155,7 @@ body.light-theme #bg-animated {
     background: rgba(var(--dark-rgb, 15, 15, 15), 0.8);
     backdrop-filter: blur(20px);
     border-bottom: 1px solid var(--border-color);
-    z-index: 1000; /* au-dessus des particules */
+    z-index: 1000;
     animation: slideDown 0.5s ease-out;
     transition: background 0.3s ease;
 }
@@ -895,7 +887,7 @@ body.light-theme .review-card {
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(5px);
-    z-index: 2000; /* top layer */
+    z-index: 2000;
     align-items: center;
     justify-content: center;
 }
